@@ -5,6 +5,7 @@
  */
 package trivia_maze;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -13,6 +14,7 @@ import java.util.Objects;
  * @version Autumn 2020
  */
 public class Room {
+	
 	/** The x coordinate of the room, i.e., its column in the array. **/
 	private int myX;
 	
@@ -20,7 +22,7 @@ public class Room {
 	private int myY;
 	
 	/** The array of Doors. A room will have 1-4 doors. **/
-	private Door[] myDoors;
+	private HashMap<String, Door> myDoors;
 	
 	/** The text that appears to represent each room. */
 	private String myText;
@@ -32,9 +34,10 @@ public class Room {
 	 * @param theDoors an array of 1-4 Doors.
 	 * @param theText a String of what the text is for the Room.
 	 */
-	public Room(final int theX, final int theY, final Door[] theDoors, 
-			final String theText) {
-		if (theX < 1 || theY < 1 || theDoors.length < 1 || theDoors.length > 4) {
+	public Room(final int theX, final int theY, 
+			final HashMap<String, Door> theDoors, final String theText) {
+		if (theX < 1 || theY < 1 || theDoors.keySet().size() < 1 || 
+				theDoors.keySet().size() > 4) {
 			throw new IllegalArgumentException();
 		} else {
 			myX = Objects.requireNonNull(theX);
@@ -74,7 +77,7 @@ public class Room {
 	/**
 	 * @return the doors
 	 */
-	public Door[] getDoors() {
+	public HashMap<String, Door> getDoors() {
 		return myDoors;
 	}
 
