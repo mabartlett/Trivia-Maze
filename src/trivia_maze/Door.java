@@ -5,6 +5,7 @@
  */
 package trivia_maze;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -17,14 +18,14 @@ public class Door {
 	private boolean myLocked;
 	
 	/** The two rooms this door passes through. */
-	private Room[] myRooms;
+	private ArrayList<Room> myRooms;
 	
 	/**
 	 * Constructs a door.
 	 * @param theRooms the two rooms this door is between.
 	 */
-	public Door(final Room[] theRooms) {
-		if (theRooms.length != 2) {
+	public Door(final ArrayList<Room> theRooms) {
+		if (theRooms.size() != 2) {
 			throw new IllegalArgumentException();
 		} else {
 			myRooms = Objects.requireNonNull(theRooms);
@@ -41,7 +42,7 @@ public class Door {
 	/**
 	 * @return the rooms
 	 */
-	public Room[] getRooms() {
+	public ArrayList<Room> getRooms() {
 		return myRooms;
 	}
 }
