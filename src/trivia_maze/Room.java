@@ -22,19 +22,25 @@ public class Room {
 	/** The array of Doors. A room will have 1-4 doors. **/
 	private Door[] myDoors;
 	
+	/** The text that appears to represent each room. */
+	private String myText;
+	
 	/**
 	 * Constructs a Room.
 	 * @param theX an int representing the room's x coordinate.
 	 * @param theY an int representing the room's y coordinate.
 	 * @param theDoors an array of 1-4 Doors.
+	 * @param theText a String of what the text is for the Room.
 	 */
-	public Room(final int theX, final int theY, final Door[] theDoors) {
+	public Room(final int theX, final int theY, final Door[] theDoors, 
+			final String theText) {
 		if (theX < 1 || theY < 1 || theDoors.length < 1 || theDoors.length > 4) {
 			throw new IllegalArgumentException();
 		} else {
 			myX = Objects.requireNonNull(theX);
 			myY = Objects.requireNonNull(theY);
 			myDoors = Objects.requireNonNull(theDoors);
+			myText = Objects.requireNonNull(theText);
 		}
 	}
 	
@@ -70,5 +76,12 @@ public class Room {
 	 */
 	public Door[] getDoors() {
 		return myDoors;
+	}
+
+	/**
+	 * @return the text
+	 */
+	public String getText() {
+		return myText;
 	}
 }
