@@ -5,7 +5,6 @@
  */
 package trivia_maze;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -17,18 +16,22 @@ public class Door {
 	/** Represents whether the door has been locked. */
 	private boolean myLocked;
 	
-	/** The two rooms this door passes through. */
-	private ArrayList<Room> myRooms;
+	/** The first pair of coordinates between which the Door lies. **/
+	private int[] myCoords1;
+	
+	/** The Second pair of coordinates between which the Door lies. **/
+	private int[] myCoords2;
 	
 	/**
 	 * Constructs a door.
-	 * @param theRooms the two rooms this door is between.
+	 * @param theCoords1 an int[] of the first pair of coordinates.
+	 * @param theCoords2 an int[] of the second pair of coordinates.
 	 */
-	public Door(final ArrayList<Room> theRooms) {
-		if (theRooms.size() != 2) {
-			throw new IllegalArgumentException();
-		} else {
-			myRooms = Objects.requireNonNull(theRooms);
+	public Door(final int[] theCoords1, final int[] theCoords2) {
+		if (theCoords1.length != 2 || theCoords2.length != 2 || 
+				theCoords1.equals(theCoords2)) {
+			myCoords1 = Objects.requireNonNull(theCoords1);
+			myCoords2 = Objects.requireNonNull(theCoords2);
 		}
 	}
 	
@@ -46,12 +49,14 @@ public class Door {
 	public void setLocked(final boolean theLocked) {
 		myLocked = Objects.requireNonNull(theLocked);
 	}
-
+	
 	/**
-	 * @return the rooms
+	 * Get the pairs of coordinates between which the door lies.
+	 * @return a 2D array of the 2 coordinate pairs for this Door.
 	 */
-	public ArrayList<Room> getRooms() {
-		return myRooms;
+	public int[][] getCoordinates() {
+		final int[][] result = {myCoords1, myCoords2};
+		return result;
 	}
 	
 	/**

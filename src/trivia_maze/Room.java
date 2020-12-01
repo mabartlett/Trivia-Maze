@@ -59,27 +59,16 @@ public class Room {
 			myText = Objects.requireNonNull(theText);
 		}
 	}
-	
+
 	/**
 	 * This method is called whenever the player tries to pass through a door. 
-	 * It verifies there is a door in the direction and the door is not locked.
-	 * @param theDirection a String of the direction, either "n", "s", "e", 
-	 * or "w".
-	 * @return the new Room the player arrives at by going through the Door if
-	 * it can be passed through and null otherwise.
+	 * @param theDoor the Door the player is trying to pass through.
+	 * @return true if the player passed through the door and false otherwise.
 	 */
-	public Room passThroughDoor(final String theDirection) {
-		Room result = null;
-		if (verifyDirection(theDirection)) {
-			Door door = myDoors.get(theDirection);
-			if (door != null && !door.isLocked()) {
-				// Get the other room the door leads to.
-				ArrayList<Room> rooms = door.getRooms();
-				rooms.remove(this);
-				result = rooms.get(0);
-			}
-		} else {
-			throw new IllegalArgumentException();
+	public boolean passThroughDoor(final Door theDoor) {
+		boolean result = true;
+		if (theDoor.isLocked()) {
+			result = false;
 		}
 		return result;
 	}
