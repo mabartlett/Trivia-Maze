@@ -70,14 +70,32 @@ public class Room {
 	 */
 	public Room passThroughDoor(final String theDirection) {
 		Room result = null;
-		Door door = myDoors.get(theDirection);
-		if (door != null && !door.isLocked()) {
-			// Get the other room the door leads to.
-			ArrayList<Room> rooms = door.getRooms();
-			rooms.remove(this);
-			result = rooms.get(0);
+		if (verifyDirection(theDirection)) {
+			Door door = myDoors.get(theDirection);
+			if (door != null && !door.isLocked()) {
+				// Get the other room the door leads to.
+				ArrayList<Room> rooms = door.getRooms();
+				rooms.remove(this);
+				result = rooms.get(0);
+			}
+		} else {
+			throw new IllegalArgumentException();
 		}
 		return result;
+	}
+	
+	/**
+	 * Locks a door to the appropriate direction.
+	 * @param theDirection a String of the direction, either "n", "s", "e", 
+	 * or "w".
+	 */
+	public void lockDoor(final String theDirection) {
+		if (verifyDirection(theDirection)) {
+			final Door door = myDoors.get(theDirection);
+			door.setLocked(true);
+		} else {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	/**
@@ -106,5 +124,41 @@ public class Room {
 	 */
 	public String getText() {
 		return myText;
+	}
+	
+	/**
+	 * Change the text representation of the room.
+	 * @param theText the text with which the Room will be represented. It must
+	 * be an empty string or a String longer than 1 character.
+	 */
+	public void setText(final String theText) {
+		if ("".equals(theText) || theText.length() > 1) {
+			throw new IllegalArgumentException();
+		} else {
+			myText = Objects.requireNonNull(theText);
+		}
+	}
+	
+	/**
+	 * @return a String representation of the Room object.
+	 */
+	public String toString() {
+		return myText;
+	}
+	
+	/**
+	 * Verify that the direction is valid, i.e., either "n", "s", "e", or "w".
+	 * @param theDirection the String to test.
+	 * @return Whether the direction is valid.
+	 */
+	private boolean verifyDirection(final String theDirection) {
+		boolean result = false;
+		for (String s: VALID_DIRECTIONS) {
+			if (s.equals(theDirection)) {
+				result = true;
+				break;
+			}
+		}
+		return result;
 	}
 }

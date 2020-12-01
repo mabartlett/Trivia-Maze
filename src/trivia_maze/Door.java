@@ -38,11 +38,33 @@ public class Door {
 	public boolean isLocked() {
 		return myLocked;
 	}
+	
+	/**
+	 * Locks or unlocks the door according to the passed argument.
+	 * @param theLocked true locks the door and false unlocks it.
+	 */
+	public void setLocked(final boolean theLocked) {
+		myLocked = Objects.requireNonNull(theLocked);
+	}
 
 	/**
 	 * @return the rooms
 	 */
 	public ArrayList<Room> getRooms() {
 		return myRooms;
+	}
+	
+	/**
+	 * A locked door appears as an "x" in the console and as a space unlocked.
+	 * @return a String representation of the Door.
+	 */
+	public String toString() {
+		String result;
+		if (myLocked) {
+			result = "x";
+		} else {
+			result = " ";
+		}
+		return result;
 	}
 }
