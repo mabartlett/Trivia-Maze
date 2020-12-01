@@ -13,8 +13,14 @@ import java.util.Objects;
  * @version Autumn 2020
  */
 public class Door {
-	/** Represents whether the door has been locked. */
+	/** Represents whether the door has been interacted with by the player. */
 	private boolean myLocked;
+	
+	/** 
+	 * Represents whether the door cannot be opened at all by the player. The 
+	 * Door would be permalocked if the player answers a question wrong. 
+	 */
+	private boolean myPermaLocked;
 	
 	/** The first pair of coordinates between which the Door lies. **/
 	private int[] myCoords1;
@@ -32,6 +38,8 @@ public class Door {
 				theCoords1.equals(theCoords2)) {
 			myCoords1 = Objects.requireNonNull(theCoords1);
 			myCoords2 = Objects.requireNonNull(theCoords2);
+			myLocked = true;
+			myPermaLocked = false;
 		}
 	}
 	
@@ -48,6 +56,20 @@ public class Door {
 	 */
 	public void setLocked(final boolean theLocked) {
 		myLocked = Objects.requireNonNull(theLocked);
+	}
+	
+	/**
+	 * @return whether the Door is perma-locked.
+	 */
+	public boolean isPermaLocked() {
+		return myPermaLocked;
+	}
+	
+	/**
+	 * @param thePermaLocked a boolean of the perma-locked state for the Door.
+	 */
+	public void setPermaLocked(final boolean thePermaLocked) {
+		myPermaLocked = Objects.requireNonNull(thePermaLocked);
 	}
 	
 	/**
