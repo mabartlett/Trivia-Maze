@@ -36,6 +36,8 @@ public class Door {
 	public Door(final int[] theCoords1, final int[] theCoords2) {
 		if (theCoords1.length != 2 || theCoords2.length != 2 || 
 				theCoords1.equals(theCoords2)) {
+			throw new IllegalArgumentException();
+		} else {
 			myCoords1 = Objects.requireNonNull(theCoords1);
 			myCoords2 = Objects.requireNonNull(theCoords2);
 			myLocked = true;
@@ -87,10 +89,41 @@ public class Door {
 	 */
 	public String toString() {
 		String result;
-		if (myLocked) {
+		if (myPermaLocked) {
 			result = "x";
 		} else {
 			result = " ";
+		}
+		return result;
+	}
+	
+	/**
+	 * Compares two objects and performs deep equals
+	 * @param theOther the other object to compare
+	 * @return true if the two objects are Doors with identical fields.
+	 */
+	@Override
+	public boolean equals(final Object theOther) {
+		boolean result;
+		if (theOther == this) {
+			result = true;
+		} else if (theOther == null) {
+			result = false;
+		} else if (!theOther.getClass().getName().equals(getClass().getName())) {
+			result = false;
+		} else {
+			result = true;
+			for (int i = 0; i < ((Door)theOther).getCoordinates().length; i++) {
+				for (int j = 0; j < ((Door)theOther).getCoordinates()[i].length;
+						j++) {
+					if (((Door)theOther).getCoordinates()[i][j] != 
+							getCoordinates()[i][j]) {
+						result = false;
+					}
+				}
+			}
+			result = result && isLocked() == ((Door)theOther).isLocked() &&
+						isPermaLocked() == ((Door)theOther).isPermaLocked();
 		}
 		return result;
 	}
