@@ -24,6 +24,16 @@ public class Room {
 	// Calvin added this.
 	private String text;
 	
+	private Door northDoor;
+	
+	private Door eastDoor;
+	
+	private Door southDoor;
+	
+	private Door westDoor;
+	
+	private boolean myLocked = true;
+	
 	/**
 	 * Constructs a Room.
 	 * @param theX an int representing the room's x coordinate.
@@ -39,6 +49,13 @@ public class Room {
 			myDoors = Objects.requireNonNull(theDoors);
 		}
 	}
+	
+//	public Room(Door northDoor, Door eastDoor, Door southDoor, Door westDoor) {
+//		this.northDoor = northDoor;
+//		this.eastDoor = eastDoor;
+//		this.southDoor = southDoor;
+//		this.westDoor = westDoor;
+//	}
 	
 	// Calvin added this.
 	public Room(String test) {
@@ -83,4 +100,19 @@ public class Room {
 	public String toString() {
 		return text;
 	}
+	
+	public boolean isLocked() {
+		return myLocked;
+	}
+	
+//	// NEED TO EDIT
+//	public void printRoom() {
+//		for (int i = 0; i < this.room.length; i++) {
+//			for (int j = 0; j < this.room[i].length; j++) {
+//				System.out.print(this.room[i][j] + " ");
+//			}
+//			
+//			System.out.println();
+//		}
+//	}
 }

@@ -14,7 +14,7 @@ public class TriviaMaze {
 	}
 	
 	public static void menu(Scanner console) {
-		Game mazeGame = null;
+		Maze mazeGame = null;
 		
 		System.out.print("\nPlease enter an option: (P)LAY -- (L)OAD FILE -- (H)ELP -- (Q)UIT\n");
 		String input = console.nextLine().toLowerCase();
@@ -25,7 +25,7 @@ public class TriviaMaze {
 		
 		while (!input.equals("q")) {
 			if (input.equals("p")) {
-				mazeGame.playGame(console);
+				mazeGame.initMaze();
 				break;
 			} else if (input.equals("l")) {
 				mazeGame.loadGame();
@@ -55,17 +55,14 @@ public class TriviaMaze {
 		while (!input.equals("b")) {
 			if (input.equals("a")) {
 				System.out.println("This game is a trivia maze.");
-				System.out.println("You must traverse through the map from the beginning");
-				System.out.println("to the end by answering questions. If you answer a");
-				System.out.println("question wrong, the door to that pathway will be");
-				System.out.println("permanently locked. If you answer it correctly, you");
-				System.out.println("progress onto the next room.\n");
+				System.out.println("1. You traverse through the map by answering questions.");
+				System.out.println("2. If you answer a question wrong, the door to that pathway will be permanently locked.");
+				System.out.println("3. If you answer it correctly, you progress onto the next room.\n");
 			} else if (input.equals("g")) {
-				System.out.println("To traverse a direction, enter N/S/E/W for");
-				System.out.println("North/South/East/West. To answer a multiple choice");
-				System.out.println("question, enter a/b/c/d to select an option.");
-				System.out.println("To answer a true/false, enter the respective choice.");
-				System.out.println("To answer a short-response quEestion, enter your answer.\n");
+				System.out.println("1. To traverse a direction, enter N/E/S/W for North/East/South/West.");
+				System.out.println("2. To answer a multiple choice question, enter a/b/c/d to select an option.");
+				System.out.println("3. To answer a true/false, enter the respective choice.");
+				System.out.println("4. To answer a short-response question, enter your answer.\n");
 			} else {
 				System.out.println("Wrong input.\n");
 			}

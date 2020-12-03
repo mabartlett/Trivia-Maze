@@ -13,7 +13,7 @@ import java.util.Objects;
  */
 public class Door {
 	/** Represents whether the door has been locked. */
-	private boolean myLocked;
+	private boolean myLocked = true;
 	
 	/** The two rooms this door passes through. */
 	private Room[] myRooms;
@@ -36,6 +36,10 @@ public class Door {
 	public boolean isLocked() {
 		return myLocked;
 	}
+	
+//	public boolean isPassable() {
+//		// in case someone wants to go north with no door??
+//	}
 
 	/**
 	 * @return the rooms
