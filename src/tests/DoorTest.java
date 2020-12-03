@@ -23,10 +23,10 @@ public class DoorTest {
 	private Door myDoorTest;
 	
 	/**
-	 * Sets up a Door for testing.
+	 * Makes a door with fully legal arguments.
 	 */
 	@Before
-	public void setUp() {
+	public void makeDoor() {
 		final int[] a = {0, 0};
 		final int[] b = {0, 1};
 		myDoorTest = new Door(a, b);
@@ -51,8 +51,7 @@ public class DoorTest {
 	public void constructorArgTest1() {
 		final int[] a = {0};
 		final int[] b = {0, 1};
-		final Door door = new Door(a, b);
-		
+		myDoorTest = new Door(a, b);
 	}
 	
 	/**
@@ -62,7 +61,7 @@ public class DoorTest {
 	public void constructorArgTest2() {
 		final int[] a = {0};
 		final int[] b = {0, 1};
-		final Door door = new Door(b, a);
+		myDoorTest = new Door(b, a);
 	}
 	
 	/**
@@ -72,6 +71,61 @@ public class DoorTest {
 	public void constructorArgTest3() {
 		final int[] a = {0, 0};
 		final int[] b = {0, 0};
-		final Door door = new Door(a, a);
+		myDoorTest = new Door(a, b);
+	}
+	
+	/**
+	 * Verifies the setLocked() method.
+	 */
+	@Test
+	public void setLockedTest() {
+		myDoorTest.setLocked(true);
+		assertTrue("setLocked() failed to set myLocked correctly.", 
+				myDoorTest.isLocked());
+	}
+	
+	/**
+	 * Verifies the setPermaLocked() method.
+	 */
+	@Test 
+	public void setPermaLockedTest() {
+		 myDoorTest.setPermaLocked(true);
+		 assertTrue("setLocked() failed to set myPermaLocked correctly.", 
+				 myDoorTest.isPermaLocked());
+	}
+	
+	/**
+	 * Tests toString() 
+	 */
+	@Test
+	public void toStringTest() {
+		assertEquals("toString() returned wrong String.", " ", 
+				myDoorTest.toString());
+		myDoorTest.setPermaLocked(true);
+		assertEquals("toString() returned wrong String.", "x", 
+				myDoorTest.toString());
+	}
+	
+	/**
+	 * Tests equals()
+	 */
+	@Test
+	public void equalsTest() {
+		assertTrue("equals() fails to check for reflexivity.", 
+				myDoorTest.equals(myDoorTest));
+		assertFalse("equals() fails to check against null.", 
+				myDoorTest.equals(null));
+		final Object object = new Object();
+		assertFalse("equals() fails to check against different classes.", 
+				myDoorTest.equals(object));
+		final int[] a = {0, 0};
+		final int[] b = {0, 1};
+		final Door door = new Door(a, b);
+		assertTrue("equals() fails to compare all fields.", 
+				myDoorTest.equals(door));
+		final int[] c = {1, 1};
+		final Door anotherDoor = new Door(b, c);
+		assertFalse("equals() fails to compare all fields.", 
+				myDoorTest.equals(anotherDoor));
 	}
 }

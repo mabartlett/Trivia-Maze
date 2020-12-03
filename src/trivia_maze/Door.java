@@ -5,6 +5,7 @@
  */
 package trivia_maze;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -13,6 +14,9 @@ import java.util.Objects;
  * @version Autumn 2020
  */
 public class Door {
+	/** The allowed length of the coordinates passed to the constructor. */ 
+	public static int COORDINATE_LENGTH = 2; 
+	
 	/** Represents whether the door has been interacted with by the player. */
 	private boolean myLocked;
 	
@@ -34,8 +38,9 @@ public class Door {
 	 * @param theCoords2 an int[] of the second pair of coordinates.
 	 */
 	public Door(final int[] theCoords1, final int[] theCoords2) {
-		if (theCoords1.length != 2 || theCoords2.length != 2 || 
-				theCoords1.equals(theCoords2)) {
+		if (theCoords1.length != COORDINATE_LENGTH || 
+				theCoords2.length != COORDINATE_LENGTH || 
+				Arrays.equals(theCoords1, theCoords2)) {
 			throw new IllegalArgumentException();
 		} else {
 			myCoords1 = Objects.requireNonNull(theCoords1);
