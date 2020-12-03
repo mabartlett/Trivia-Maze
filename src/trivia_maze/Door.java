@@ -26,10 +26,10 @@ public class Door {
 	 */
 	private boolean myPermaLocked;
 	
-	/** The first pair of coordinates between which the Door lies. **/
+	/** The first pair of row, col coordinates between which the Door lies. **/
 	private int[] myCoords1;
 	
-	/** The Second pair of coordinates between which the Door lies. **/
+	/** The Second pair of row, col coordinates between which the Door lies. **/
 	private int[] myCoords2;
 	
 	/**

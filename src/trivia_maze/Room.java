@@ -32,14 +32,14 @@ public class Room {
 	
 	/**
 	 * Constructs a Room.
-	 * @param theX an int representing the room's x coordinate.
-	 * @param theY an int representing the room's y coordinate.
+	 * @param theX an int representing the room's x coordinate or column.
+	 * @param theY an int representing the room's y coordinate or row.
 	 * @param theDoors a HashMap of 1-4 Strings (directions) to Doors.
 	 * @param theText a String of what the text is for the Room.
 	 */
 	public Room(final int theX, final int theY, 
 			final HashMap<String, Door> theDoors, final String theText) {
-		if (theX < 1 || theY < 1 || theDoors.keySet().size() < 1 || 
+		if (theX < 0 || theY < 0 || theDoors.keySet().size() < 1 || 
 				theDoors.keySet().size() > 4 ) {
 			throw new IllegalArgumentException();
 		} else {
@@ -62,12 +62,15 @@ public class Room {
 
 	/**
 	 * This method is called whenever the player tries to pass through a door. 
-	 * @param theDoor the Door the player is trying to pass through.
+	 * @param theDirection the direction the player is trying to go to.
 	 * @return true if the player passed through the door and false otherwise.
 	 */
-	public boolean passThroughDoor(final Door theDoor) {
+	public boolean passThroughDoor(final String theDirection) {
 		boolean result = true;
-		if (theDoor.isLocked()) {
+		if (!verifyDirection(theDirection)) {
+			throw new IllegalArgumentException();
+		}
+		if (myDoors.get(theDirection).isLocked()) {
 			result = false;
 		}
 		return result;

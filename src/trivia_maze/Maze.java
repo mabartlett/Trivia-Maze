@@ -7,9 +7,22 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Maze implements Serializable {
+	/** The ID for serialization. */
+	public static final long serialVersionUID = 1L;
+	
+	/** Represents the player. */
+	public static final String PLAYER_STRING = "P";
+	
+	/** Represents the exit of the maze. */
+	public static final String EXIT_STRING = "E";
+	
+	/** Represents each room. */
+	public static final String ROOM_STRING = "O";
+
 	private int rows;
 	
 	private int columns;
@@ -36,55 +49,18 @@ public class Maze implements Serializable {
 	
 //	private Theme myTheme;
 	
-	
-	
 	public Maze(int theRows, int theColumns) {
 		this.rows = theRows;
 		this.columns = theColumns;
 		maze = new Room[rows][columns];
-		
 		playerRow = 0;
 		playerColumn = 0;
 		exitRow = rows - 1;
 		exitColumn = columns - 1;
-
 		myCurrentRoom = maze[playerRow][playerColumn];
 		exit = maze[exitRow][exitColumn];
-		
-		// Initial maze printed
-		for (int i = 0; i < maze.length; i++) {
-			for (int j = 0; j < maze[0].length; j++) {
-				if (i == 0 && j == 0) {
-					maze[i][j] = new Room("P   ");
-				} else if ((i == rows - 1) && (j == columns - 1)) {
-					maze[i][j] = new Room("E");
-				} else if (j == columns - 1) {
-					maze[i][j] = new Room("O");
-				}	else {
-					maze[i][j] = new Room("O   ");
-				}
-			}
-		}
-		
-		
-//		for (int a = 0; a < maze.length; a++) {
-//			for (int b = 0; b < maze[0].length; b++) {
-//				printMaze = printMaze + maze[a][b].toString();
-//			}
-//			printMaze = printMaze + "\n";
-//		}
+		initializeMaze();
 	}
-	
-//	public void printMaze() {
-//		for (int a = 0; a < maze.length; a++) {
-//			for (int b = 0; b < maze[0].length; b++) {
-//				printMaze = printMaze + maze[a][b].toString();
-//			}
-//			printMaze = printMaze + "\n";
-//		}
-//		
-//		System.out.println(printMaze);
-//	}
 	
 	public void printMaze() {
 		for (int a = 0; a < maze.length; a++) {
@@ -218,7 +194,7 @@ public class Maze implements Serializable {
 	public void move() {
 		if (input.equals("n")) {
 			moveNorth();
-			myCurrentRoom = new Room("P   ");
+			//myCurrentRoom = new Room("P   ");
 		} else {
 			System.out.println("North door is locked.");
 		}
@@ -234,42 +210,72 @@ public class Maze implements Serializable {
 	 *  && northRoom().isPassable()
 	 */
 	public void moveNorth() {
-		if (!northRoom().isLocked() && northRoom() != null) {
-			myCurrentRoom = northRoom();
+		// TODO Check if door is locked.
+		if (maze[playerRow - 1][playerColumn] != null) {
+			myCurrentRoom = maze[playerRow - 1][playerColumn];
 		}
 	}
 	
 	public void moveEast() {
-		if (!eastRoom().isLocked() && eastRoom() != null) {
-			myCurrentRoom = eastRoom();
+		// TODO Check if door is locked.
+		if (maze[playerRow][playerColumn + 1] != null) {
+			myCurrentRoom = maze[playerRow][playerColumn + 1];
 		}
 	}
 	
 	public void moveSouth() {
-		if (!southRoom().isLocked() && southRoom() != null) {
-			myCurrentRoom = southRoom();
+		// TODO Check if door is locked.
+		if (maze[playerRow + 1][playerColumn] != null) {
+			myCurrentRoom = maze[playerRow + 1][playerColumn];
 		}
 	}
 	
 	public void moveWest() {
-		if (!westRoom().isLocked() && westRoom() != null) {
-			myCurrentRoom = westRoom();
+		// TODO Check if door is locked.
+		if (maze[playerRow][playerColumn - 1] != null) {
+			myCurrentRoom = maze[playerRow][playerColumn - 1];
 		}
 	}
 	
-	public Room northRoom() {
-		return maze[playerRow - 1][playerColumn];
-	}
-	
-	public Room eastRoom() {
-		return maze[playerRow][playerColumn + 1];
-	}
-	
-	public Room southRoom() {
-		return maze[playerRow + 1][playerColumn];
-	}
-	
-	public Room westRoom() {
-		return maze[playerRow][playerColumn - 1];
+	/**
+	 * Creates the actual maze that is composed of Rooms. Remember that a 
+	 * Room's x coordinate is its column and a Room's y coordinate is its row.
+	 */
+	private void initializeMaze() {
+		Door northDoor;
+		Door southDoor;
+		Door eastDoor;
+		Door westDoor;
+		HashMap<String, Door> doorMap = new HashMap<String, Door>();
+		String text;
+		for (int i = 0; i < maze.length; i++) {
+			for (int j = 0; j < maze[0].length; j++) {
+				doorMap.clear();
+				northDoor = new Door(new int[] {i, j}, new int[] {i - 1, j});
+				southDoor = new Door(new int[] {i, j}, new int[] {i + 1, j});
+				eastDoor = new Door(new int[] {i, j}, new int[] {i, j + 1});
+				westDoor = new Door(new int[] {i, j}, new int[] {i, j - 1});
+				if (i != 0) {
+					doorMap.put("n", northDoor);
+				} 
+				if (j != 0) {
+					doorMap.put("w", westDoor);
+				}
+				if (i != maze.length - 1) {
+					doorMap.put("s", southDoor);
+				}
+				if (j != maze[0].length - 1) {
+					doorMap.put("e", eastDoor);
+				}
+				text = ROOM_STRING + "  ";
+				if (i == 0 && j == 0) {
+					text = PLAYER_STRING + "  ";
+				} else if (i == maze.length - 1 && j == maze[0].length - 1) {
+					text = EXIT_STRING;
+				}
+				// Remember that the x is its column and y is its row!
+				maze[i][j] = new Room(j, i, doorMap, text);
+			}
+		}
 	}
 }
