@@ -171,13 +171,16 @@ public class Maze implements Serializable {
 	 */
 	public static void initMaze() {
 		Scanner console = new Scanner(System.in);
-		System.out.println("\nPlease insert the number of rows and columns you want to play with: ");
+		System.out.println("\nPlease insert the number of rows and columns you" +
+				"want to play with: ");
 		int rows = console.nextInt();
 		int columns = console.nextInt();
+		// TODO use named constants here!
 		if (rows < 4 || columns < 4) {
 			System.out.println("Please enter a minimum of 4 rows and 4 columns.");
 			initMaze();
 		} else {
+			// TODO: ??
 			Maze mazeGame = new Maze(rows, columns);
 			mazeGame.playGame();
 		}
@@ -225,6 +228,7 @@ public class Maze implements Serializable {
 			System.out.println("S) South");
 			System.out.println("W) West");
 			System.out.println("Q) Quit");
+			// TODO add save
 			input = test.next().toLowerCase();
 		}
 		return input;

@@ -27,6 +27,7 @@ public class Door {
 	private boolean myPermaLocked;
 	
 	/** The first pair of row, col coordinates between which the Door lies. **/
+	// TODO Get rid the coordinates
 	private int[] myCoords1;
 	
 	/** The Second pair of row, col coordinates between which the Door lies. **/
@@ -41,6 +42,7 @@ public class Door {
 		if (theCoords1.length != COORDINATE_LENGTH || 
 				theCoords2.length != COORDINATE_LENGTH || 
 				Arrays.equals(theCoords1, theCoords2)) {
+			// TODO add messages for illegal argument exceptions.
 			throw new IllegalArgumentException();
 		} else {
 			myCoords1 = Objects.requireNonNull(theCoords1);
