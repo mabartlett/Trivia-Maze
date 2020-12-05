@@ -27,9 +27,7 @@ public class DoorTest {
 	 */
 	@Before
 	public void makeDoor() {
-		final int[] a = {0, 0};
-		final int[] b = {0, 1};
-		myDoorTest = new Door(a, b);
+		myDoorTest = new Door();
 	}
 	
 	/**
@@ -37,41 +35,9 @@ public class DoorTest {
 	 */
 	@Test
 	public void constructorTest() {
-		final int[] a = {0, 0};
-		final int[] b = {0, 1};
-		final Door door = new Door(a, b);
+		final Door door = new Door();
 		assertEquals("Constructor method failed to initalize fields properly.",
 				door, myDoorTest);
-	}
-	
-	/**
-	 * Tests the constructor for first illegal argument.
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void constructorArgTest1() {
-		final int[] a = {0};
-		final int[] b = {0, 1};
-		myDoorTest = new Door(a, b);
-	}
-	
-	/**
-	 * Tests the constructor for second illegal argument.
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void constructorArgTest2() {
-		final int[] a = {0};
-		final int[] b = {0, 1};
-		myDoorTest = new Door(b, a);
-	}
-	
-	/**
-	 * Tests the constructor when both arguments are equal.
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void constructorArgTest3() {
-		final int[] a = {0, 0};
-		final int[] b = {0, 0};
-		myDoorTest = new Door(a, b);
 	}
 	
 	/**
@@ -111,21 +77,18 @@ public class DoorTest {
 	 */
 	@Test
 	public void equalsTest() {
-		assertTrue("equals() fails to check for reflexivity.", 
+		assertTrue("equals() failed to check for reflexivity.", 
 				myDoorTest.equals(myDoorTest));
-		assertFalse("equals() fails to check against null.", 
+		assertFalse("equals() failed to check against null.", 
 				myDoorTest.equals(null));
 		final Object object = new Object();
-		assertFalse("equals() fails to check against different classes.", 
+		assertFalse("equals() failed to check against different classes.", 
 				myDoorTest.equals(object));
-		final int[] a = {0, 0};
-		final int[] b = {0, 1};
-		final Door door = new Door(a, b);
-		assertTrue("equals() fails to compare all fields.", 
+		final Door door = new Door();
+		assertTrue("equals() failed to compare same fields.", 
 				myDoorTest.equals(door));
-		final int[] c = {1, 1};
-		final Door anotherDoor = new Door(b, c);
-		assertFalse("equals() fails to compare all fields.", 
-				myDoorTest.equals(anotherDoor));
+		door.setLocked(false);
+		assertFalse("equals() failed to compare different fields.", 
+				myDoorTest.equals(door));
 	}
 }

@@ -5,7 +5,6 @@
  */
 package trivia_maze;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -14,8 +13,6 @@ import java.util.Objects;
  * @version Autumn 2020
  */
 public class Door {
-	/** The allowed length of the coordinates passed to the constructor. */ 
-	public static int COORDINATE_LENGTH = 2; 
 	
 	/** Represents whether the door has been interacted with by the player. */
 	private boolean myLocked;
@@ -26,30 +23,12 @@ public class Door {
 	 */
 	private boolean myPermaLocked;
 	
-	/** The first pair of row, col coordinates between which the Door lies. **/
-	// TODO Get rid the coordinates
-	private int[] myCoords1;
-	
-	/** The Second pair of row, col coordinates between which the Door lies. **/
-	private int[] myCoords2;
-	
 	/**
 	 * Constructs a door.
-	 * @param theCoords1 an int[] of the first pair of coordinates.
-	 * @param theCoords2 an int[] of the second pair of coordinates.
 	 */
-	public Door(final int[] theCoords1, final int[] theCoords2) {
-		if (theCoords1.length != COORDINATE_LENGTH || 
-				theCoords2.length != COORDINATE_LENGTH || 
-				Arrays.equals(theCoords1, theCoords2)) {
-			// TODO add messages for illegal argument exceptions.
-			throw new IllegalArgumentException();
-		} else {
-			myCoords1 = Objects.requireNonNull(theCoords1);
-			myCoords2 = Objects.requireNonNull(theCoords2);
+	public Door() {
 			myLocked = true;
 			myPermaLocked = false;
-		}
 	}
 	
 	/**
@@ -82,15 +61,6 @@ public class Door {
 	}
 	
 	/**
-	 * Get the pairs of coordinates between which the door lies.
-	 * @return a 2D array of the 2 coordinate pairs for this Door.
-	 */
-	public int[][] getCoordinates() {
-		final int[][] result = {myCoords1, myCoords2};
-		return result;
-	}
-	
-	/**
 	 * A locked door appears as an "x" in the console and as a space unlocked.
 	 * @return a String representation of the Door.
 	 */
@@ -119,17 +89,7 @@ public class Door {
 		} else if (!theOther.getClass().getName().equals(getClass().getName())) {
 			result = false;
 		} else {
-			result = true;
-			for (int i = 0; i < ((Door)theOther).getCoordinates().length; i++) {
-				for (int j = 0; j < ((Door)theOther).getCoordinates()[i].length;
-						j++) {
-					if (((Door)theOther).getCoordinates()[i][j] != 
-							getCoordinates()[i][j]) {
-						result = false;
-					}
-				}
-			}
-			result = result && isLocked() == ((Door)theOther).isLocked() &&
+			result = isLocked() == ((Door)theOther).isLocked() &&
 						isPermaLocked() == ((Door)theOther).isPermaLocked();
 		}
 		return result;

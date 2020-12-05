@@ -24,7 +24,10 @@ public class Room {
 	/** The y coordinate of the room, i.e., its row in the array. **/
 	private int myY;
 	
-	/** The array of Doors. A room will have 1-4 doors. **/
+	/** 
+	 * The map of Strings to Doors. A Room will have 1-4 Doors. The String is
+	 * the direction. 
+	 */
 	private HashMap<String, Door> myDoors;
 	
 	/** The text that appears to represent each room. */
@@ -70,7 +73,8 @@ public class Room {
 		if (!verifyDirection(theDirection)) {
 			throw new IllegalArgumentException();
 		}
-		if (myDoors.get(theDirection).isLocked()) {
+		if (myDoors.get(theDirection).isLocked() || 
+				myDoors.get(theDirection).isPermaLocked()) {
 			result = false;
 		}
 		return result;
