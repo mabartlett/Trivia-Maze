@@ -5,8 +5,6 @@
  */
 package trivia_maze;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -17,7 +15,10 @@ import java.util.Objects;
  */
 public class Room {
 	/** The valid directions that the player can go. **/
-	private final String[] VALID_DIRECTIONS = {"n", "s", "e", "w"};
+	public static final String[] VALID_DIRECTIONS = {"n", "s", "e", "w"};
+	
+	/** The allowed length for the myText field. */
+	public static final int MAX_TEXT_LENGTH = 1;
 	
 	/** The x coordinate of the room, i.e., its column in the array. **/
 	private int myX;
@@ -89,8 +90,7 @@ public class Room {
 		if (!verifyDirection(theDirection)) {
 			throw new IllegalArgumentException();
 		}
-		if (myDoors.get(theDirection).isLocked() || 
-				myDoors.get(theDirection).isPermaLocked()) {
+		if (myDoors.get(theDirection).isPermaLocked()) {
 			result = false;
 		}
 		return result;
@@ -104,7 +104,7 @@ public class Room {
 	public void lockDoor(final String theDirection) {
 		if (verifyDirection(theDirection)) {
 			final Door door = myDoors.get(theDirection);
-			door.setLocked(true);
+			door.setPermaLocked(true);
 		} else {
 			throw new IllegalArgumentException();
 		}
@@ -138,14 +138,21 @@ public class Room {
 		return myText;
 	}
 	
+	/** @return the doors */
+	public HashMap<String, Door> getDoors() {
+		return myDoors;
+	}
+	
 	/**
 	 * Change the text representation of the room.
 	 * @param theText the text with which the Room will be represented. It must
 	 * be an empty string or a String longer than 1 character.
 	 */
 	public void setText(final String theText) {
-		if ("".equals(theText) || theText.length() > 1) {
-			throw new IllegalArgumentException();
+		if (theText.length() > MAX_TEXT_LENGTH) {
+			throw new IllegalArgumentException("String is too long.");
+		} else if ("".equals(theText)) {
+			throw new IllegalArgumentException("String must not be empty.");
 		} else {
 			myText = Objects.requireNonNull(theText);
 		}
