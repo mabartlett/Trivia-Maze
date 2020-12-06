@@ -6,6 +6,7 @@
 package trivia_maze;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -23,13 +24,13 @@ public class Room {
 	
 	/** The y coordinate of the room, i.e., its row in the array. **/
 	private int myY;
+
+	/** A String representing the directions from the room that have doors. */
+	private String myDirections;
 	
-	/** 
-	 * The map of Strings to Doors. A Room will have 1-4 Doors. The String is
-	 * the direction. 
-	 */
+	/** A map of one of the valid directions to a door. */
 	private HashMap<String, Door> myDoors;
-	
+
 	/** The text that appears to represent each room. */
 	private String myText;
 	
@@ -37,29 +38,44 @@ public class Room {
 	 * Constructs a Room.
 	 * @param theX an int representing the room's x coordinate or column.
 	 * @param theY an int representing the room's y coordinate or row.
-	 * @param theDoors a HashMap of 1-4 Strings (directions) to Doors.
+	 * @param theDirections a String containing only "n", "s", "e", or "w".
 	 * @param theText a String of what the text is for the Room.
 	 */
-	public Room(final int theX, final int theY, 
-			final HashMap<String, Door> theDoors, final String theText) {
-		if (theX < 0 || theY < 0 || theDoors.keySet().size() < 1 || 
-				theDoors.keySet().size() > 4 ) {
-			throw new IllegalArgumentException();
+	public Room(final int theX, final int theY, final String theDirections,
+			final String theText) {
+		if (theX < 0) {
+			throw new IllegalArgumentException("Room's x coordinate cannot be "
+					+ "negative.");
+		} else if (theY < 0) {
+			throw new IllegalArgumentException("Room's y coordinate cannot be "
+					+ "negative.");
+		} else if ("".equals(theDirections)) {
+			throw new IllegalArgumentException("Room must have at least 1 "
+					+ "door.");
 		} else {
-			// Verify theDoors has no invalid keys.
-			final ArrayList<String> directions = new ArrayList<String>();
-			for (String i: VALID_DIRECTIONS) {
-				directions.add(i);
-			}
-			for (String i: theDoors.keySet()) {
-				if (!directions.contains(i)) {
-					throw new IllegalArgumentException();
+			// Verify theDirections has no invalid directions.
+			boolean valid;
+			for (int i = 0; i < theDirections.length(); i++) {
+				valid = false;
+				for (String j: VALID_DIRECTIONS) {
+					if (j.equals(theDirections.substring(i, i + 1))) {
+						valid = true;
+					}
+				}
+				if (!valid) {
+					throw new IllegalArgumentException("Room was passed an "
+							+ "illegal direction");
 				}
 			}
 			myX = Objects.requireNonNull(theX);
 			myY = Objects.requireNonNull(theY);
-			myDoors = Objects.requireNonNull(theDoors);
+			myDirections = Objects.requireNonNull(theDirections);
 			myText = Objects.requireNonNull(theText);
+			myDoors = new HashMap<String, Door>();
+			// Add the doors.
+			for (int i = 0; i < myDirections.length(); i++) {
+				myDoors.put(myDirections.substring(i, i + 1), new Door());
+			}
 		}
 	}
 
@@ -109,10 +125,10 @@ public class Room {
 	}
 
 	/**
-	 * @return the doors
+	 * @return the directions
 	 */
-	public HashMap<String, Door> getDoors() {
-		return myDoors;
+	public String getDirections() {
+		return myDirections;
 	}
 
 	/**
