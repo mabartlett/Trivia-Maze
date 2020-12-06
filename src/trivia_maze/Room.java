@@ -30,6 +30,8 @@ public class Room {
 	/** The text that appears to represent each room. */
 	private String myText;
 	
+	private String text;
+	
 	/**
 	 * Constructs a Room.
 	 * @param theX an int representing the room's x coordinate or column.
@@ -58,6 +60,10 @@ public class Room {
 			myDoors = Objects.requireNonNull(theDoors);
 			myText = Objects.requireNonNull(theText);
 		}
+	}
+	
+	public Room(final String text1) {
+		text = text1;
 	}
 
 	/**
