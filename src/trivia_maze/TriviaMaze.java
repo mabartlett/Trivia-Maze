@@ -30,7 +30,8 @@ public class TriviaMaze {
 				mazeGame.initMaze();
 				break;
 			} else if (input.equals("l")) {
-				mazeGame.loadGame();
+				// TODO 
+				//mazeGame.loadGame();
 				break;
 			} else if (input.equals("h")) {
 				help(console);

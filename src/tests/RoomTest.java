@@ -194,4 +194,40 @@ public class RoomTest {
 		assertEquals("toString() returned wrong string representation.", 
 				myRoom.toString(), VALID_STRING);
 	}
+	
+	/** Tests equals for negative response. */
+	@Test
+	public void equalsFalseTest() {
+		assertFalse("equals() fails check against null.", myRoom.equals(null));
+		assertFalse("equals() fails check against different class.", 
+				myRoom.equals(new Object()));
+		assertFalse("equals() fails check for different x-coordinate.", 
+				myRoom.equals(new Room(VALID_COORDINATE + 1, VALID_COORDINATE, 
+						VALID_DIRECTIONS, VALID_STRING)));
+		assertFalse("equals() fails check for different y-coordinate.", 
+				myRoom.equals(new Room(VALID_COORDINATE, VALID_COORDINATE + 1, 
+						VALID_DIRECTIONS, VALID_STRING)));
+		assertFalse("equals() fails check against different directions.", 
+				myRoom.equals(new Room(VALID_COORDINATE, VALID_COORDINATE, 
+						VALID_DIRECTIONS.substring(0, 1), VALID_STRING)));
+		assertFalse("equals() fails check against different text.", 
+				myRoom.equals(new Room(VALID_COORDINATE, VALID_COORDINATE, 
+						VALID_DIRECTIONS, ANOTHER_VALID_STRING)));
+		final Room r = new Room(VALID_COORDINATE, VALID_COORDINATE, 
+				VALID_DIRECTIONS, VALID_STRING);
+		r.lockDoor(VALID_DIRECTIONS.substring(0, 1));
+		assertFalse("equals() fails check against different Doors.", 
+				myRoom.equals(r));
+	}
+	
+	/** Tests equal for positive response. */
+	@Test
+	public void equalsTrueTest() {
+		assertTrue("equals() fails check against self.", myRoom.equals(myRoom));
+		final Room r = new Room(VALID_COORDINATE, VALID_COORDINATE, 
+				VALID_DIRECTIONS, VALID_STRING);
+		assertTrue("equals() fails check against fields.", myRoom.equals(r));
+	}
+	
+	
 }

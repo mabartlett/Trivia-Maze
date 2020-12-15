@@ -161,8 +161,34 @@ public class Room {
 	/**
 	 * @return a String representation of the Room object.
 	 */
+	@Override
 	public String toString() {
 		return myText;
+	}
+	
+	/**
+	 * @return Whether the fields are the same for another Room and this one.
+	 * @param theOther the other object to compare it to.
+	 */
+	@Override
+	public boolean equals(final Object theOther) {
+		boolean result;
+		if (theOther == this) {
+			result = true;
+		} else if (theOther == null) {
+			result = false;
+		} else if (!theOther.getClass().getName().equals(getClass().
+				getName())) {
+			result = false;
+		} else {
+			result = myX == ((Room)theOther).getX();
+			result = result && myY == ((Room)theOther).getY();
+			result = result && myDirections.equals(((Room)theOther).
+					getDirections());
+			result = result && myText.equals(((Room)theOther).getText());
+			result = result && myDoors.equals(((Room)theOther).getDoors());
+		}
+		return result;
 	}
 	
 	/**
