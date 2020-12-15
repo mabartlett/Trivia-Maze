@@ -1,8 +1,14 @@
 package trivia_maze;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Scanner;
 
 public class TriviaMaze {
+	/** The name of the save file. */
+	private static String mySavePath = "SavedGame.ser";
+	
 	public static void main(String[] args) {
 		Scanner console = new Scanner (System.in);
 		
@@ -30,13 +36,10 @@ public class TriviaMaze {
 				mazeGame.initMaze();
 				break;
 			} else if (input.equals("l")) {
-				// TODO 
-				//mazeGame.loadGame();
+				loadGame();
 				break;
 			} else if (input.equals("h")) {
 				help(console);
-			} else if (input.equals("save")) {
-				mazeGame.saveGame();
 			} else {
 				System.out.println("Wrong input.");
 			}
@@ -48,6 +51,30 @@ public class TriviaMaze {
 				System.out.println("Sorry to see you go. Goodbye!");
 				break;
 			}
+		}
+	}
+	
+	/**
+	 * Loads the game.
+	 */
+	public static void loadGame() {
+		Room[][] maze = null;
+		try {
+			FileInputStream fileIn = new FileInputStream(mySavePath);
+			ObjectInputStream in = new ObjectInputStream(fileIn);
+			maze = (Room[][]) in.readObject();
+			in.close();
+			fileIn.close();
+			System.out.println("Game data loaded successfully!");
+			Maze game = new Maze(maze);
+			game.playGame();
+		} catch (IOException i) {
+			System.out.println("Game data could not be loaded.");
+			return;
+		} catch (ClassNotFoundException c) {
+			System.out.println("Saved game file not found.");
+			c.printStackTrace();
+			return;
 		}
 	}
 	

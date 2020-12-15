@@ -7,6 +7,9 @@ package tests;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
 import org.junit.Before;
 import org.junit.Test;
 import trivia_maze.Door;
@@ -40,19 +43,12 @@ public class MazeTest {
 	}
 
 	/**
-	 * Test method for {@link trivia_maze.Maze#Maze(int, int)}.
-	 */
-	@Test
-	public void testMazeIntInt() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
 	 * Test method for {@link trivia_maze.Maze#Maze(trivia_maze.Room[][])}.
 	 */
 	@Test
 	public void testMazeRoomArrayArray() {
-		fail("Not yet implemented"); // TODO
+		final Room[][] testRooms = new Room[VALID_LENGTH][VALID_LENGTH];
+		myMaze = new Maze(testRooms);
 	}
 
 	/**
@@ -60,7 +56,7 @@ public class MazeTest {
 	 */
 	@Test
 	public void testPrintMaze() {
-		fail("Not yet implemented"); // TODO
+		myMaze.printMaze();
 	}
 
 	/**
@@ -105,7 +101,6 @@ public class MazeTest {
 	public void testGetCurrentRoom() {
 		boolean result = myMaze.getCurrentRoom().getX() == START_COORDINATE;
 		result = result && myMaze.getCurrentRoom().getY() == START_COORDINATE;
-		System.out.println(myMaze.getCurrentRoom());
 		assertTrue("getCurrentRoom() returned Room with wrong coordinates.", 
 				result);
 	}
@@ -157,7 +152,8 @@ public class MazeTest {
 	 */
 	@Test
 	public void testMoveMenu() {
-		fail("Not yet implemented"); // TODO
+		setIn("q");
+		myMaze.moveMenu();
 	}
 
 	/**
@@ -165,7 +161,8 @@ public class MazeTest {
 	 */
 	@Test
 	public void testOutOfBounds() {
-		fail("Not yet implemented"); // TODO
+		setIn("q");
+		myMaze.outOfBounds();
 	}
 
 	/**
@@ -173,7 +170,8 @@ public class MazeTest {
 	 */
 	@Test
 	public void testPassedRoom() {
-		fail("Not yet implemented"); // TODO
+		setIn("q");
+		myMaze.passedRoom();
 	}
 
 	/**
@@ -222,6 +220,18 @@ public class MazeTest {
 	@Test
 	public void testMove() {
 		fail("Not yet implemented"); // TODO
+	}
+	
+	/**
+	 * Sets a given string as input to System. I used this page for reference: 
+	 * https://stackoverflow.com/questions/6415728
+	 * By the way, this is super cool and I didn't know you could do this!
+	 * @param theString the string which is to be used as input
+	 */
+	private void setIn(final String theString) {
+		ByteArrayInputStream bais = new ByteArrayInputStream(
+				theString.getBytes());
+		System.setIn(bais);
 	}
 
 }

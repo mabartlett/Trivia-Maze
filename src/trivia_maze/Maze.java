@@ -70,8 +70,6 @@ public class Maze implements Serializable {
 	
 	private boolean gameOver = false;
 	
-	private HashMap<String, Door> doorMap = new HashMap<String, Door>();
-	
 	private int nextRoomRow;
 	
 	private int nextRoomColumn;
@@ -79,8 +77,6 @@ public class Maze implements Serializable {
 	private static String input = "";
 	
 	private boolean incorrectAnswer;
-	/** The currently selected theme for the questions. */
-//	private Theme myTheme;
 	
 	/**
 	 * Constructs a Maze
@@ -91,13 +87,13 @@ public class Maze implements Serializable {
 		myRows = theRows;
 		myColumns = theColumns;
 		myMaze = new Room[myRows][myColumns];
+		initializeMaze();
 		myPlayerRow = 0;
 		myPlayerColumn = 0;
 		myExitRow = myRows - 1;
 		myExitColumn = myColumns - 1;
 		myCurrentRoom = myMaze[myPlayerRow][myPlayerColumn];
 		myExit = myMaze[myExitRow][myExitColumn];
-		initializeMaze();
 	}
 	
 	/**
@@ -396,29 +392,22 @@ public class Maze implements Serializable {
 	 * Room's x coordinate is its column and a Room's y coordinate is its row.
 	 */
 	private void initializeMaze() {
-		Door northDoor;
-		Door southDoor;
-		Door eastDoor;
-		Door westDoor;
 		String text;
+		StringBuilder directions;
 		for (int i = 0; i < myMaze.length; i++) {
 			for (int j = 0; j < myMaze[0].length; j++) {
-				doorMap.clear();
-				northDoor = new Door();
-				southDoor = new Door();
-				eastDoor = new Door();
-				westDoor = new Door();
+				directions = new StringBuilder();
 				if (i != 0) {
-					doorMap.put("n", northDoor);
+					directions.append("n");
 				} 
 				if (j != 0) {
-					doorMap.put("w", westDoor);
+					directions.append("w");
 				}
 				if (i != myMaze.length - 1) {
-					doorMap.put("s", southDoor);
+					directions.append("s");
 				}
 				if (j != myMaze[0].length - 1) {
-					doorMap.put("e", eastDoor);
+					directions.append("e");
 				}
 				text = ROOM_STRING + "  ";
 				if (i == 0 && j == 0) {
@@ -427,7 +416,7 @@ public class Maze implements Serializable {
 					text = EXIT_STRING;
 				}
 				// Remember that the x is its column and y is its row!
-				myMaze[i][j] = new Room(i, j, "n", text);
+				myMaze[i][j] = new Room(i, j, directions.toString(), text);
 			}
 		}
 	}
