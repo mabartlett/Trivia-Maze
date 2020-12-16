@@ -8,11 +8,10 @@ package tests;
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.util.NoSuchElementException;
 
 import org.junit.Before;
 import org.junit.Test;
-import trivia_maze.Door;
 import trivia_maze.Maze;
 import trivia_maze.Room;
 
@@ -30,6 +29,15 @@ public class MazeTest {
 	
 	/** This is where the player starts. */
 	public static final int START_COORDINATE = 0;
+	
+	/** The answer to the mock question. */
+	public static final String QUESTION_ANSWER = "yes";
+	
+	/** The answer to the move menu prompt. */
+	public static final String RESPONSE = "q";
+	
+	/** An invalid response to the move menu prompt. */
+	public static final String INVALID_RESPONSE = "grok";
 	
 	/** The Maze instance being tested. */
 	private Maze myMaze;
@@ -110,7 +118,6 @@ public class MazeTest {
 	 */
 	@Test
 	public void testGetExitRoom() {
-		System.out.println(myMaze.getExitRoom());
 		assertEquals("getExitRoom() returned the wrong room.", myMaze.getExitRoom(), 
 				myMaze.getMaze()[VALID_LENGTH - 1][VALID_LENGTH - 1]);
 	}
@@ -126,9 +133,11 @@ public class MazeTest {
 	/**
 	 * Test method for {@link trivia_maze.Maze#initMaze()}.
 	 */
-	@Test
+	// Don't look at the line directly below. It's... it's too horrible!
+	@Test(expected = NoSuchElementException.class)
 	public void testInitMaze() {
-		fail("Not yet implemented"); // TODO
+		setIn("x 3 y 3 5 5 q");
+		myMaze.initMaze();
 	}
 
 	/**
@@ -136,7 +145,8 @@ public class MazeTest {
 	 */
 	@Test
 	public void testPlayGame() {
-		fail("Not yet implemented"); // TODO
+		setIn(RESPONSE);
+		myMaze.playGame();
 	}
 
 	/**
@@ -152,7 +162,7 @@ public class MazeTest {
 	 */
 	@Test
 	public void testMoveMenu() {
-		setIn("q");
+		setIn(RESPONSE);
 		myMaze.moveMenu();
 	}
 
@@ -161,7 +171,7 @@ public class MazeTest {
 	 */
 	@Test
 	public void testOutOfBounds() {
-		setIn("q");
+		setIn(RESPONSE);
 		myMaze.outOfBounds();
 	}
 
@@ -170,7 +180,7 @@ public class MazeTest {
 	 */
 	@Test
 	public void testPassedRoom() {
-		setIn("q");
+		setIn(RESPONSE);
 		myMaze.passedRoom();
 	}
 
@@ -187,7 +197,13 @@ public class MazeTest {
 	 */
 	@Test
 	public void testMoveNorth() {
-		fail("Not yet implemented"); // TODO
+		setIn(RESPONSE);
+		myMaze.moveNorth();
+		setIn(QUESTION_ANSWER + "\n" + RESPONSE);
+		myMaze.moveSouth();
+		setIn(RESPONSE);
+		myMaze.moveNorth();
+		
 	}
 
 	/**
@@ -195,7 +211,16 @@ public class MazeTest {
 	 */
 	@Test
 	public void testMoveSouth() {
-		fail("Not yet implemented"); // TODO
+		setIn(QUESTION_ANSWER + "\n" + RESPONSE);
+		myMaze.moveSouth();
+		myMaze.getCurrentRoom().equals(
+				myMaze.getMaze()[1][0]);
+		for (int i = 0; i < VALID_LENGTH - 2; i++) {
+			setIn(QUESTION_ANSWER + "\n" + RESPONSE);
+			myMaze.moveSouth();
+		}
+		setIn(RESPONSE);
+		myMaze.moveSouth();
 	}
 
 	/**
@@ -203,7 +228,14 @@ public class MazeTest {
 	 */
 	@Test
 	public void testMoveEast() {
-		fail("Not yet implemented"); // TODO
+		setIn(QUESTION_ANSWER + "\n" + RESPONSE);
+		myMaze.moveEast();
+		myMaze.getCurrentRoom().equals(
+				myMaze.getMaze()[0][1]);
+		setIn(RESPONSE);
+		myMaze.moveWest();
+		setIn(RESPONSE);
+		myMaze.moveEast();
 	}
 
 	/**
@@ -211,7 +243,12 @@ public class MazeTest {
 	 */
 	@Test
 	public void testMoveWest() {
-		fail("Not yet implemented"); // TODO
+		setIn(RESPONSE);
+		myMaze.moveWest();
+		setIn(QUESTION_ANSWER + "\n" + RESPONSE);
+		myMaze.moveEast();
+		setIn(RESPONSE);
+		myMaze.moveWest();
 	}
 
 	/**
@@ -219,7 +256,18 @@ public class MazeTest {
 	 */
 	@Test
 	public void testMove() {
-		fail("Not yet implemented"); // TODO
+		setIn(RESPONSE);
+		myMaze.move("w");
+		setIn(QUESTION_ANSWER + "\n" + RESPONSE);
+		myMaze.move("s");
+		setIn(RESPONSE);
+		myMaze.move("a");
+		setIn(QUESTION_ANSWER + "\n" + RESPONSE);
+		myMaze.move("d");
+		myMaze.move("q");
+		myMaze.move("v");
+		setIn(RESPONSE);
+		myMaze.move(INVALID_RESPONSE);
 	}
 	
 	/**
@@ -230,7 +278,7 @@ public class MazeTest {
 	 */
 	private void setIn(final String theString) {
 		ByteArrayInputStream bais = new ByteArrayInputStream(
-				theString.getBytes());
+				(theString).getBytes());
 		System.setIn(bais);
 	}
 

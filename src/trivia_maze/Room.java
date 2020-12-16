@@ -18,7 +18,7 @@ public class Room {
 	public static final String[] VALID_DIRECTIONS = {"n", "s", "e", "w"};
 	
 	/** The allowed length for the myText field. */
-	public static final int MAX_TEXT_LENGTH = 1;
+	public static final int MAX_TEXT_LENGTH = 3;
 	
 	/** The x coordinate of the room, i.e., its column in the array. **/
 	private int myX;

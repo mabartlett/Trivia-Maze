@@ -149,6 +149,11 @@ public class Maze implements Serializable {
 	public Room getExitRoom() {
 		return myExit;
 	}
+	
+	/** @return the next room */
+	public Room getNextRoom() {
+		return nextRoom;
+	}
 		
 	/**
 	 * Saves the game.
@@ -169,11 +174,21 @@ public class Maze implements Serializable {
 	/**
 	 * Makes the maze based on input.
 	 */
-	public static void initMaze() {
+	public void initMaze() {
 		Scanner console = new Scanner(System.in);
 		System.out.println("\nPlease insert the number of rows and columns you want to play with: ");
-		int rows = console.nextInt();
-		int columns = console.nextInt();
+		String r = console.next();
+		while(!r.matches("\\d")) {
+			System.out.println("You must enter an integer!");
+			r = console.next();
+		}
+		int rows = Integer.valueOf(r);
+		String c = console.next();
+		while(!c.matches("\\d")) {
+			System.out.println("You must enter an integer!");
+			c = console.next();
+		}
+		int columns = Integer.valueOf(c);
 		if (rows < MIN_ROWS || columns < MIN_COLUMNS) {
 			System.out.println("Please enter a minimum of 4 rows and 4 columns.");
 			initMaze();
@@ -269,7 +284,7 @@ public class Maze implements Serializable {
 		
 		askQuestion();
 		if (incorrectAnswer == true) {
-			nextRoom.lockDoor("n");
+			nextRoom.lockDoor("s");
 			return;
 		}
 
@@ -294,7 +309,7 @@ public class Maze implements Serializable {
 		
 		askQuestion();
 		if (incorrectAnswer == true) {
-			nextRoom.lockDoor("s");
+			nextRoom.lockDoor("n");
 			return;
 		}
 
@@ -319,7 +334,7 @@ public class Maze implements Serializable {
 		
 		askQuestion();
 		if (incorrectAnswer == true) {
-			nextRoom.lockDoor("e");
+			nextRoom.lockDoor("w");
 			return;
 		}
 
@@ -344,7 +359,7 @@ public class Maze implements Serializable {
 		
 		askQuestion();
 		if (incorrectAnswer == true) {
-			nextRoom.lockDoor("w");
+			nextRoom.lockDoor("e");
 			return;
 		}
 		
