@@ -40,7 +40,7 @@ public class Question {
 	
 	/**
 	 * Check if the answer from user is correct. 3 different cases, True/False 
-	 * case, Multplie choice, short answer.
+	 * case, Multiple choice, short answer.
 	 * @param theAnswer User Answer
 	 * @return if the answer is correct
 	 */

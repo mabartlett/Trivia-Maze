@@ -13,19 +13,19 @@ import java.util.Scanner;
 
 public class Maze implements Serializable {
 	/** The ID for serialization. */
-	public static final long serialVersionUID = 1L;
+	public final long serialVersionUID = 1L;
 	
 	/** Represents the player. */
-	public static final String PLAYER_STRING = "P";
+	public final String PLAYER_STRING = "P";
 	
 	/** Represents the exit of the maze. */
-	public static final String EXIT_STRING = "E";
+	public final String EXIT_STRING = "E";
 	
 	/** Represents each room. */
-	public static final String ROOM_STRING = "O";
+	public final String ROOM_STRING = "O";
 	
 	/** Represents each room. */
-	public static final String PASSEDROOM_STRING = "M";
+	public final String PASSEDROOM_STRING = "X";
 	
 	/** Represents the minimum rows required for the maze. */
 	public static final int MIN_ROWS = 4;
@@ -66,21 +66,25 @@ public class Maze implements Serializable {
 	/** The column in which the exit is. */
 	private int myExitColumn;
 	
+	/** The object of the Maze. */
 	private static Maze mazeGame;
 	
+	/** The current result of the game. */
 	private boolean gameOver = false;
 	
 	private HashMap<String, Door> doorMap = new HashMap<String, Door>();
 	
+	/** The next Room's row. */
 	private int nextRoomRow;
 	
+	/** The next Room's column. */
 	private int nextRoomColumn;
 	
+	/** The user's input for the movement. */
 	private static String input = "";
 	
+	/** Checks whether the user's answer to the question is correct or incorrect. */
 	private boolean incorrectAnswer;
-	/** The currently selected theme for the questions. */
-//	private Theme myTheme;
 	
 	/**
 	 * Constructs a Maze
@@ -117,7 +121,7 @@ public class Maze implements Serializable {
 			for (int b = 0; b < myMaze[0].length; b++) {
 				sb.append(myMaze[a][b].toString());
 			}
-			sb.append("\n");
+			sb.append("\n\n");
 		}
 		System.out.println(sb.toString());
 	}
@@ -150,8 +154,9 @@ public class Maze implements Serializable {
 		return myCurrentRoom;
 	}
 	
-	public Room getExitRoom() {
-		return myExit;
+	/** @return the next room */
+	public Room getNextRoom() {
+		return nextRoom;
 	}
 		
 	/**
@@ -176,8 +181,20 @@ public class Maze implements Serializable {
 	public static void initMaze() {
 		Scanner console = new Scanner(System.in);
 		System.out.println("\nPlease insert the number of rows and columns you want to play with: ");
-		int rows = console.nextInt();
-		int columns = console.nextInt();
+		String r = console.next();
+		while (!r.matches("\\d")) {
+			System.out.println("You must enter an integer!");
+			r = console.next();
+		}
+		int rows = Integer.valueOf(r);
+		
+		String c = console.next();
+		while (!c.matches("\\d")) {
+			System.out.println("You must enter an integer!");
+			c = console.next();
+		}
+		int columns = Integer.valueOf(c);
+		
 		if (rows < MIN_ROWS || columns < MIN_COLUMNS) {
 			System.out.println("Please enter a minimum of 4 rows and 4 columns.");
 			initMaze();
@@ -202,6 +219,16 @@ public class Maze implements Serializable {
 				break;
 			}
 			
+			if (playerTrapped()) {
+				System.out.println("\nYou are trapped! Game is now over.");
+				break;
+			}
+			
+//			if (checkCurrentRoom()) {
+//				System.out.println("\nYou are trapped! Game is now over.");
+//				break;
+//			}
+			
 			move(moveMenu());
 		}
 	}
@@ -212,7 +239,7 @@ public class Maze implements Serializable {
 	public void askQuestion() {
 		// TODO
 		Scanner test = new Scanner(System.in);
-		String answer = "yes";
+		String answer = "y";
 		String input2 = "";
 		
 		System.out.println("Question 1: Do you want to move to the next room?");
@@ -222,7 +249,7 @@ public class Maze implements Serializable {
 			System.out.println("Correct!");
 			incorrectAnswer = false;
 		} else {
-			System.out.println("Incorrect answer. Door is now locked.");
+			System.out.println("Incorrect answer. Door is now permanently locked.");
 			incorrectAnswer = true;
 		}
 	}
@@ -258,9 +285,37 @@ public class Maze implements Serializable {
 	}
 	
 	public void setRooms() {
-		nextRoom.setText(PLAYER_STRING + "  ");
-		myCurrentRoom.setText(PASSEDROOM_STRING + "  ");
+		nextRoom.setText(PLAYER_STRING + "   ");
+		myCurrentRoom.setText(PASSEDROOM_STRING + "   ");
 	}
+	
+//	public boolean checkCurrentRoom() {
+//		myCurrentRoom = myMaze[myPlayerRow][myPlayerColumn];
+//		Room northRoom;
+//		Room southRoom;
+//		Room eastRoom;
+//		Room westRoom;
+//		boolean check = false;
+//		
+//		if ((myPlayerRow != 0) && (myPlayerRow != myMaze.length - 1)
+//				&& (myPlayerColumn != 0) && (myPlayerColumn != myMaze[0].length - 1)) {
+//			northRoom = myMaze[myPlayerRow - 1][myPlayerColumn];
+//			southRoom = myMaze[myPlayerRow + 1][myPlayerColumn];
+//			eastRoom = myMaze[myPlayerRow][myPlayerColumn + 1];
+//			westRoom = myMaze[myPlayerRow][myPlayerColumn - 1];
+//			
+//			if ((northRoom.getText().equals(PASSEDROOM_STRING + "   ")) && 
+//					(southRoom.getText().equals(PASSEDROOM_STRING + "   ")) &&
+//					(eastRoom.getText().equals(PASSEDROOM_STRING + "   ")) &&
+//					(westRoom.getText().equals(PASSEDROOM_STRING + "   "))) {
+//				check = true;
+//			}
+//		}
+//		
+//		gameOver = check;
+//		return gameOver;
+//	}
+	
 	
 	public void moveNorth() {
 		nextRoomRow = myPlayerRow - 1;
@@ -270,21 +325,28 @@ public class Maze implements Serializable {
 		}
 		
 		nextRoom = myMaze[myPlayerRow - 1][myPlayerColumn];
+		myCurrentRoom.lockDoor("n");
 		
-		askQuestion();
-		if (incorrectAnswer == true) {
-			nextRoom.lockDoor("n");
+		if (nextRoom.getText().equals(PASSEDROOM_STRING + "   ")) {
+//			myCurrentRoom.lockDoor("n");
+			System.out.println("This door is permanently locked.");
 			return;
 		}
-
-		if (nextRoom.getText().equals(PASSEDROOM_STRING + "  ")) {
-			passedRoom();
-		} else {
-			setRooms();
-			myPlayerRow -= 1;
-				
-			myCurrentRoom = myMaze[myPlayerRow][myPlayerColumn];
+		
+		if (myCurrentRoom.passThroughDoor("n")) {
+			askQuestion();
+			if (incorrectAnswer == true) {
+				myCurrentRoom.lockDoor("n");
+				return;
+			}
 		}
+		
+		setRooms();
+		
+		myPlayerRow -= 1;
+				
+		myCurrentRoom = myMaze[myPlayerRow][myPlayerColumn];
+		myCurrentRoom.lockDoor("s");
 	}
 	
 	public void moveSouth() {
@@ -296,23 +358,29 @@ public class Maze implements Serializable {
 		
 		nextRoom = myMaze[myPlayerRow + 1][myPlayerColumn];
 		
-		askQuestion();
-		if (incorrectAnswer == true) {
-			nextRoom.lockDoor("s");
+		if (nextRoom.getText().equals(PASSEDROOM_STRING + "   ")) {
+			myCurrentRoom.lockDoor("s");
+			System.out.println("This door is permanently locked.");
 			return;
 		}
-
-		if (nextRoom.getText().equals(PASSEDROOM_STRING + "  ")) {
-			passedRoom();
-		} else {
-			setRooms();
-			myPlayerRow += 1;
-				
-			myCurrentRoom = myMaze[myPlayerRow][myPlayerColumn];
+		
+		if (myCurrentRoom.passThroughDoor("s")) {
+			askQuestion();
+			if (incorrectAnswer == true) {
+				myCurrentRoom.lockDoor("s");
+				return;
+			}
 		}
+		
+		setRooms();
+		
+		myPlayerRow += 1;
+				
+		myCurrentRoom = myMaze[myPlayerRow][myPlayerColumn];
+		myCurrentRoom.lockDoor("n");
 	}
 	
-	public void moveEast() {
+	public void moveEast() {		
 		nextRoomColumn = myPlayerColumn + 1;
 		if (nextRoomColumn >= myColumns) {
 			outOfBounds();
@@ -321,20 +389,26 @@ public class Maze implements Serializable {
 		
 		nextRoom = myMaze[myPlayerRow][myPlayerColumn + 1];
 		
-		askQuestion();
-		if (incorrectAnswer == true) {
-			nextRoom.lockDoor("e");
+		if (nextRoom.getText().equals(PASSEDROOM_STRING + "   ")) {
+			myCurrentRoom.lockDoor("e");
+			System.out.println("This door is permanently locked.");
 			return;
 		}
-
-		if (nextRoom.getText().equals(PASSEDROOM_STRING + "  ")) {
-			passedRoom();
-		} else {
-			setRooms();
-			myPlayerColumn += 1;
-			
-			myCurrentRoom = myMaze[myPlayerRow][myPlayerColumn];
+		
+		if (myCurrentRoom.passThroughDoor("e")) {
+			askQuestion();
+			if (incorrectAnswer == true) {
+				myCurrentRoom.lockDoor("e");
+				return;
+			}
 		}
+		
+		setRooms();
+		
+		myPlayerColumn += 1;
+				
+		myCurrentRoom = myMaze[myPlayerRow][myPlayerColumn];
+		myCurrentRoom.lockDoor("w");
 	}
 	
 	public void moveWest() {
@@ -346,20 +420,27 @@ public class Maze implements Serializable {
 		
 		nextRoom = myMaze[myPlayerRow][myPlayerColumn - 1];
 		
-		askQuestion();
-		if (incorrectAnswer == true) {
-			nextRoom.lockDoor("w");
+		if (nextRoom.getText().equals(PASSEDROOM_STRING + "   ")) {
+			myCurrentRoom.lockDoor("w");
+			System.out.println("This door is permanently locked.");
 			return;
 		}
 		
-		if (nextRoom.getText().equals(PASSEDROOM_STRING + "  ")) {
-			passedRoom();
-		} else {
-			setRooms();
-			myPlayerColumn -= 1;
-			
-			myCurrentRoom = myMaze[myPlayerRow][myPlayerColumn];
+		if (myCurrentRoom.passThroughDoor("w")) {
+			askQuestion();
+			if (incorrectAnswer == true) {
+				myCurrentRoom.lockDoor("w");
+				myCurrentRoom.getDoors().get("w").toString();
+				return;
+			}
 		}
+		
+		setRooms();
+		
+		myPlayerColumn -= 1;
+				
+		myCurrentRoom = myMaze[myPlayerRow][myPlayerColumn];
+		myCurrentRoom.lockDoor("e");
 	}
 	
 	/**
@@ -395,40 +476,48 @@ public class Maze implements Serializable {
 	 * Creates the actual maze that is composed of Rooms. Remember that a 
 	 * Room's x coordinate is its column and a Room's y coordinate is its row.
 	 */
-	private void initializeMaze() {
-		Door northDoor;
-		Door southDoor;
-		Door eastDoor;
-		Door westDoor;
+	private void initializeMaze() {		
 		String text;
+		StringBuilder directions;
 		for (int i = 0; i < myMaze.length; i++) {
 			for (int j = 0; j < myMaze[0].length; j++) {
-				doorMap.clear();
-				northDoor = new Door();
-				southDoor = new Door();
-				eastDoor = new Door();
-				westDoor = new Door();
+				directions = new StringBuilder();
 				if (i != 0) {
-					doorMap.put("n", northDoor);
+					directions.append("n");
 				} 
 				if (j != 0) {
-					doorMap.put("w", westDoor);
+					directions.append("w");
 				}
 				if (i != myMaze.length - 1) {
-					doorMap.put("s", southDoor);
+					directions.append("s");
 				}
 				if (j != myMaze[0].length - 1) {
-					doorMap.put("e", eastDoor);
+					directions.append("e");
 				}
-				text = ROOM_STRING + "  ";
+				
+				text = ROOM_STRING + "   ";
 				if (i == 0 && j == 0) {
-					text = PLAYER_STRING + "  ";
+					text = PLAYER_STRING + "   ";
 				} else if (i == myMaze.length - 1 && j == myMaze[0].length - 1) {
 					text = EXIT_STRING;
 				}
 				// Remember that the x is its column and y is its row!
-				myMaze[i][j] = new Room(i, j, "n", text);
+				myMaze[i][j] = new Room(i, j, directions.toString(), text);
 			}
 		}
+	}
+	
+	public boolean playerTrapped() {		
+		myCurrentRoom = myMaze[myPlayerRow][myPlayerColumn];
+		boolean stuck = true;
+		
+		for (String direction : myCurrentRoom.getDoors().keySet()) {
+			if (!myCurrentRoom.getDoors().get(direction).isPermaLocked()) {
+				stuck = false;
+			}
+		}
+		gameOver = stuck;
+		
+		return gameOver;
 	}
 }

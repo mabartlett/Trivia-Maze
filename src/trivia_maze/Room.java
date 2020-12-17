@@ -21,7 +21,7 @@ public class Room implements Serializable {
 	public static final String[] VALID_DIRECTIONS = {"n", "s", "e", "w"};
 	
 	/** The allowed length for the myText field. */
-	public static final int MAX_TEXT_LENGTH = 1;
+	public static final int MAX_TEXT_LENGTH = 4;
 	
 	/** The x coordinate of the room, i.e., its column in the array. **/
 	private int myX;
@@ -152,15 +152,13 @@ public class Room implements Serializable {
 	 * be an empty string or a String longer than 1 character.
 	 */
 	public void setText(final String theText) {
-//		if (theText.length() > MAX_TEXT_LENGTH) {
-//			throw new IllegalArgumentException("String is too long.");
-//		} else if ("".equals(theText)) {
-//			throw new IllegalArgumentException("String must not be empty.");
-//		} else {
-//			myText = Objects.requireNonNull(theText);
-//		}
-		
-		myText = Objects.requireNonNull(theText);
+		if (theText.length() > MAX_TEXT_LENGTH) {
+			throw new IllegalArgumentException("String is too long.");
+		} else if ("".equals(theText)) {
+			throw new IllegalArgumentException("String must not be empty.");
+		} else {
+			myText = Objects.requireNonNull(theText);
+		}
 	}
 	
 	/**
@@ -168,6 +166,31 @@ public class Room implements Serializable {
 	 */
 	public String toString() {
 		return myText;
+	}
+	
+	/**
+	 * @return Whether the fields are the same for another Room and this one.
+	 * @param theOther the other object to compare it to.
+	 */
+	@Override
+	public boolean equals(final Object theOther) {
+		boolean result;
+		if (theOther == this) {
+			result = true;
+		} else if (theOther == null) {
+			result = false;
+		} else if (!theOther.getClass().getName().equals(getClass().
+				getName())) {
+			result = false;
+		} else {
+			result = myX == ((Room)theOther).getX();
+			result = result && myY == ((Room)theOther).getY();
+			result = result && myDirections.equals(((Room)theOther).
+					getDirections());
+			result = result && myText.equals(((Room)theOther).getText());
+			result = result && myDoors.equals(((Room)theOther).getDoors());
+		}
+		return result;
 	}
 	
 	/**
