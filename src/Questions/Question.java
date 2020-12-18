@@ -12,17 +12,17 @@ public abstract class Question {
 	/**
 	 * the prompt to give to the user.
 	 */
-	private String myPrompt;
+	protected String myPrompt;
 	
 	/**
 	 * the correct answer of a question.
 	 */
-	private String myCorrectAnswer;
+	protected String myCorrectAnswer;
 	
 	/**
 	 * whether the question is answered or not. 
 	 */
-	private boolean myAnswered; 
+	protected boolean myAnswered; 
 	
 	/**
 	 * This constructs a Question object with the previous 
