@@ -21,6 +21,10 @@ public class TriviaMaze {
 		System.out.println("This program is a game in the form of a trivia maze.");
 	}
 	
+	/**
+	 * Displays the 
+	 * @param console
+	 */
 	public static void menu(Scanner console) {
 		Maze mazeGame = null;
 		
@@ -33,7 +37,7 @@ public class TriviaMaze {
 		
 		while (!input.equals("q")) {
 			if (input.equals("p")) {
-				mazeGame.initMaze();
+				Maze.initMaze();
 				break;
 			} else if (input.equals("l")) {
 				loadGame();
@@ -58,7 +62,7 @@ public class TriviaMaze {
 	 * Loads the game.
 	 */
 	public static void loadGame() {
-		Room[][] maze = null;
+		Room[][] maze;
 		try {
 			FileInputStream fileIn = new FileInputStream(mySavePath);
 			ObjectInputStream in = new ObjectInputStream(fileIn);
@@ -78,6 +82,10 @@ public class TriviaMaze {
 		}
 	}
 	
+	/**
+	 * Displays the help menu.
+	 * @param console -- takes user input to navigate through the help menu.
+	 */
 	public static void help(Scanner console) {
 		System.out.print("\nPlease enter an option: (A)BOUT -- (G)AMEPLAY INSTRUCTIONS -- (B)ACK\n");
 		String input = console.nextLine().toLowerCase();
