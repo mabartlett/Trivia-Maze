@@ -10,10 +10,10 @@ public class TriviaMaze {
 	private static String mySavePath = "SavedGame.ser";
 	
 	/** Represents the minimum rows required for the maze. */
-	public static final int MIN_ROWS = 2;
+	public static final int MIN_ROWS = 4;
 	
 	/** Represents the minimum columns required for the maze. */
-	public static final int MIN_COLUMNS = 2;
+	public static final int MIN_COLUMNS = 4;
 	
 	/** The object of the Maze. */
 	private static Maze myMazeGame;

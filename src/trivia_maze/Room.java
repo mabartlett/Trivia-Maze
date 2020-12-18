@@ -93,8 +93,9 @@ public class Room implements Serializable{
 		boolean result = true;
 		if (!verifyDirection(theDirection)) {
 			throw new IllegalArgumentException();
-		}
-		if (myDoors.get(theDirection).isPermaLocked()) {
+		} else if (myDoors.get(theDirection) == null) {
+			result = false;
+		} else if (myDoors.get(theDirection).isPermaLocked()) {
 			result = false;
 		}
 		return result;
