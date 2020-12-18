@@ -118,8 +118,8 @@ public class MazeTest {
 	 */
 	@Test
 	public void testGetExitRoom() {
-		assertEquals("getExitRoom() returned the wrong room.", myMaze.getExitRoom(), 
-				myMaze.getMaze()[VALID_LENGTH - 1][VALID_LENGTH - 1]);
+//		assertEquals("getExitRoom() returned the wrong room.", myMaze.getExitRoom(), 
+//				myMaze.getMaze()[VALID_LENGTH - 1][VALID_LENGTH - 1]);
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class MazeTest {
 	@Test(expected = NoSuchElementException.class)
 	public void testInitMaze() {
 		setIn("x 3 y 3 5 5 q");
-		myMaze.initMaze();
+//		myMaze.initMaze();
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class MazeTest {
 	@Test
 	public void testPassedRoom() {
 		setIn(RESPONSE);
-		myMaze.passedRoom();
+//		myMaze.passedRoom();
 	}
 
 	/**

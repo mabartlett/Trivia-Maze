@@ -5,6 +5,7 @@
  */
 package trivia_maze;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -13,7 +14,10 @@ import java.util.Objects;
  * @author Team 2
  * @version Autumn 2020
  */
-public class Room {
+public class Room implements Serializable{
+	/** The serial version UID. */
+	private static final long serialVersionUID = 2L;
+	
 	/** The valid directions that the player can go. **/
 	public static final String[] VALID_DIRECTIONS = {"n", "s", "e", "w"};
 	

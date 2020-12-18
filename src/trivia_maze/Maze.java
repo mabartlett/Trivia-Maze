@@ -5,11 +5,8 @@
  */
 package trivia_maze;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Scanner;
@@ -35,12 +32,6 @@ public class Maze implements Serializable {
 	/** Represents each room. */
 	public final String PASSEDROOM_STRING = "-";
 	
-	/** Represents the minimum rows required for the maze. */
-	public static final int MIN_ROWS = 4;
-	
-	/** Represents the minimum columns required for the maze. */
-	public static final int MIN_COLUMNS = 4;
-	
 	/** The number of rows in the Maze's 2D array of Rooms. */
 	private int myRows;
 	
@@ -48,16 +39,13 @@ public class Maze implements Serializable {
 	private int myColumns;
 	
 	/** The 2D array of Rooms that composes the maze. */
-	private static Room[][] myMaze;
+	private Room[][] myMaze;
 	
 	/** The Room in which the player currently is. */
 	private Room myCurrentRoom;
 	
 	/** The next Room the player wants to move to. */
 	private Room myNextRoom;
-	
-	/** The Room in which the exit is. */
-	private Room myExit;
 	
 	/** The name of the save file. */
 	private String mySavePath = "SavedGame.ser";
@@ -74,9 +62,6 @@ public class Maze implements Serializable {
 	/** The column in which the exit is. */
 	private int myExitColumn;
 	
-	/** The object of the Maze. */
-	private static Maze myMazeGame;
-	
 	/** The current result of the game. */
 	private boolean myGameOver = false;
 	
@@ -89,7 +74,7 @@ public class Maze implements Serializable {
 	/** The user's input for the movement. */
 	private static String myInput = "";
 	
-	/** Checks whether the user's answer to the question is correct or incorrect. */
+	/** Checks whether the user's answer to the question is correct. */
 	private boolean myIncorrectAnswer;
 	
 	/**
@@ -98,15 +83,16 @@ public class Maze implements Serializable {
 	 * @param theColumns the number of columns
 	 */
 	public Maze(final int theRows, final int theColumns) {
+		/*The input is guaranteed to be well-formed by the driver program, so 
+		 * we have elected not to have input validation here. */
 		myRows = theRows;
 		myColumns = theColumns;
 		myMaze = new Room[myRows][myColumns];
 		myPlayerRow = 0;
 		myPlayerColumn = 0;
-		myExitRow = myRows - 1;
+		myExitRow = myRows - 1; 
 		myExitColumn = myColumns - 1;
 		myCurrentRoom = myMaze[myPlayerRow][myPlayerColumn];
-		myExit = myMaze[myExitRow][myExitColumn];
 		initializeMaze();
 	}
 	
@@ -182,43 +168,14 @@ public class Maze implements Serializable {
 		try {
 			FileOutputStream fileOut = new FileOutputStream(mySavePath);
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
-			out.writeObject(myMaze);
+			out.writeObject(this);
 			out.close();
 			fileOut.close();
 			System.out.println("Game data has been saved.");
 		} catch (IOException i) {
 			System.out.println("Game data could not be saved.");
+			System.out.println(i);
 		}
-	}
-	
-	/**
-	 * Makes the maze based on input.
-	 */
-	public static void initMaze() {
-		Scanner console = new Scanner(System.in);
-		System.out.println("\nPlease insert the number of rows and columns you want to play with: ");
-		String r = console.next();
-		while (!r.matches("\\d")) {
-			System.out.println("You must enter an integer!");
-			r = console.next();
-		}
-		int rows = Integer.valueOf(r);
-		
-		String c = console.next();
-		while (!c.matches("\\d")) {
-			System.out.println("You must enter an integer!");
-			c = console.next();
-		}
-		int columns = Integer.valueOf(c);
-		
-		if (rows < MIN_ROWS || columns < MIN_COLUMNS) {
-			System.out.println("Please enter a minimum of 4 rows and 4 columns.");
-			initMaze();
-		} else {
-			myMazeGame = new Maze(rows, columns);
-			myMazeGame.playGame();
-		}
-		console.close();
 	}
 	
 	/**
@@ -516,10 +473,10 @@ public class Maze implements Serializable {
 				if (j != 0) {
 					directions.append("w");
 				}
-				if (i != myMaze.length - 1) {
+				if (i != myMaze.length) {
 					directions.append("s");
 				}
-				if (j != myMaze[0].length - 1) {
+				if (j != myMaze[0].length) {
 					directions.append("e");
 				}
 				

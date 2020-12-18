@@ -5,6 +5,7 @@
  */
 package trivia_maze;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -12,7 +13,9 @@ import java.util.Objects;
  * @author Team 2
  * @version Autumn 2020
  */
-public class Door {
+public class Door implements Serializable {
+	/** The serial version UID */
+	private static final long serialVersionUID = 3L;
 	
 	/** Represents whether the door has been interacted with by the player. */
 	private boolean myLocked;
