@@ -9,7 +9,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
+
+import Questions.Question;
+import Questions.MCQuestion;
 
 /**
  * This is the class for the maze itself.
@@ -77,12 +82,19 @@ public class Maze implements Serializable {
 	/** Checks whether the user's answer to the question is correct. */
 	private boolean myIncorrectAnswer;
 	
+	/** The arrayList of questions. */
+	private ArrayList<Question> myQuestions;
+	
+	/** The random object used to get questions. */
+	private Random myRandom;
+	
 	/**
 	 * Constructs a Maze
 	 * @param theRows the number of rows
 	 * @param theColumns the number of columns
 	 */
-	public Maze(final int theRows, final int theColumns) {
+	public Maze(final int theRows, final int theColumns, 
+			final ArrayList<Question> theQuestions) {
 		/*The input is guaranteed to be well-formed by the driver program, so 
 		 * we have elected not to have input validation here. */
 		myRows = theRows;
@@ -93,15 +105,9 @@ public class Maze implements Serializable {
 		myExitRow = myRows - 1; 
 		myExitColumn = myColumns - 1;
 		myCurrentRoom = myMaze[myPlayerRow][myPlayerColumn];
+		myQuestions = theQuestions;
+		myRandom = new Random();
 		initializeMaze();
-	}
-	
-	/**
-	 * Constructs a Maze with an already made 2D array of Rooms.
-	 * @param theRooms the 2D array of Rooms to make the maze out of
-	 */
-	public Maze(final Room[][] theRooms) {
-		myMaze = theRooms;
 	}
 	
 	/**
@@ -202,13 +208,13 @@ public class Maze implements Serializable {
 	 * Prompts the player for an answer to a question
 	 */
 	public void askQuestion() {
-		// TODO lock door when answered wrong.
 		Scanner test = new Scanner(System.in);
-		String answer = "y";
-		String input2 = "";
-		System.out.println("Question 1: Do you want to move to the next room?");
-		input2 = test.next().toLowerCase();
-		if (input2.equals(answer)) {
+		int n = myRandom.nextInt(myQuestions.size());
+		System.out.println(n);
+		Question q = myQuestions.remove(n);
+		System.out.println(q);
+		String userAnswer = test.next().toLowerCase();
+		if (userAnswer.equals(q.getCorrectAnswer().toLowerCase())) {
 			System.out.println("Correct!");
 			myIncorrectAnswer = false;
 		} else {

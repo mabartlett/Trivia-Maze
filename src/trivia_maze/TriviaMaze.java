@@ -3,7 +3,19 @@ package trivia_maze;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import org.sqlite.SQLiteDataSource;
+
+import Questions.MCQuestion;
+import Questions.Question;
+import Questions.SAQuestion;
+import Questions.TFQuestion;
 
 public class TriviaMaze {
 	/** The name of the save file. */
@@ -37,8 +49,8 @@ public class TriviaMaze {
 	}
 	
 	/**
-	 * Displays the 
-	 * @param console
+	 * Displays the menu.
+	 * @param console is the input scanner.
 	 */
 	public static void menu(Scanner console) {
 		System.out.print("\nPlease enter an option: (P)LAY -- (L)OAD FILE -- (H)ELP -- (Q)UIT\n");
@@ -67,6 +79,51 @@ public class TriviaMaze {
 		}
 	}
 	
+	/** Accesses the database and makes questions. */
+	private static ArrayList<Question> makeQuestions() {
+		SQLiteDataSource ds = null;
+        try {
+            ds = new SQLiteDataSource();
+            String url = "jdbc:sqlite:questions.db";
+            ds.setUrl(url);
+        } catch ( Exception e ) {
+            e.printStackTrace();
+            System.exit(0);
+        }
+        String query = "SELECT * FROM TriviaQuestionsFinal";
+        ArrayList<Question> arr = new ArrayList<Question>();
+        try ( Connection conn = ds.getConnection();
+               Statement stmt = conn.createStatement(); ) {
+              ResultSet rs = stmt.executeQuery(query);
+              while ( rs.next() ) {
+            	  Question tempQuestion;
+            	  String type = rs.getString( "type" );
+            	  String prompt = rs.getString( "prompt" );
+                  String correctAnswer = rs.getString( "correctAnswer");
+                  boolean answered = false;
+                  if(type.equals("MC")) {
+                	  ArrayList<String> temp = new ArrayList<String>();
+                	  temp.add(rs.getString( "correctAnswer" ));
+                	  temp.add(rs.getString( "possibleAnswer1" ));
+                	  temp.add(rs.getString( "possibleAnswer2" ));
+                	  temp.add(rs.getString( "possibleAnswer3" ));
+                	  tempQuestion = new MCQuestion(prompt, correctAnswer, answered, temp);
+                      arr.add(tempQuestion);
+                  } else if(type.equals("TF")) {
+                	  tempQuestion = new TFQuestion(prompt, correctAnswer, answered);
+                	  arr.add(tempQuestion);  
+                  } else {
+                	  tempQuestion = new SAQuestion(prompt, correctAnswer, answered);
+                	  arr.add(tempQuestion);  
+                  }
+              }
+          } catch ( SQLException e ) {
+              e.printStackTrace();
+              System.exit( 0 );
+          }
+        return arr;
+	}
+
 	/**
 	 * Makes the maze based on input.
 	 */
@@ -102,8 +159,9 @@ public class TriviaMaze {
 			System.out.print(MAX_COLUMNS);
 			System.out.print(" columns.");
 			System.out.println();
+			initMaze();
 		} else {
-			myMazeGame = new Maze(rows, columns);
+			myMazeGame = new Maze(rows, columns, makeQuestions());
 			myMazeGame.playGame();
 		}
 		console.close();

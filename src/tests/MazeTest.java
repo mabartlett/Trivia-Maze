@@ -13,7 +13,6 @@ import java.util.NoSuchElementException;
 import org.junit.Before;
 import org.junit.Test;
 import trivia_maze.Maze;
-import trivia_maze.Room;
 
 /**
  * This class tests Maze.
@@ -47,16 +46,7 @@ public class MazeTest {
 	 */
 	@Before
 	public void setUp() {
-		myMaze = new Maze(VALID_LENGTH, VALID_LENGTH);
-	}
-
-	/**
-	 * Test method for {@link trivia_maze.Maze#Maze(trivia_maze.Room[][])}.
-	 */
-	@Test
-	public void testMazeRoomArrayArray() {
-		final Room[][] testRooms = new Room[VALID_LENGTH][VALID_LENGTH];
-		myMaze = new Maze(testRooms);
+		myMaze = new Maze(VALID_LENGTH, VALID_LENGTH, null);
 	}
 
 	/**
