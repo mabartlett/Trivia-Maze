@@ -1,15 +1,41 @@
 package Questions;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
+
+/**
+ * 
+ * @author joseph bode
+ * @version 12/16/20
+ */
 public class MCQuestion extends Question {
 	
-	String[] myPossibleAnswers;
+	/**
+	 * the ArrayList to store all multplie choice options.
+	 */
+	ArrayList<String> myPossibleAnswers;
 	
-	public MCQuestion(String thePrompt, String theCorrectAnswer, boolean theAnswered, String[] thePossibleAnswers) {
+	/**
+	 * Constructs a MCQuestion, has one more parameter than other classes to store possible answers.
+	 * @param thePrompt the prompt of the question.
+	 * @param theCorrectAnswer the correct answer of the question
+	 * @param theAnswered whether or not question is answered.
+	 * @param thePossibleAnswers the list of possible answers for multplie choice. 
+	 */
+	public MCQuestion(String thePrompt, String theCorrectAnswer, boolean theAnswered, ArrayList<String> thePossibleAnswers) {
 		super(thePrompt, theCorrectAnswer, theAnswered);
-		myPossibleAnswers = thePossibleAnswers.clone();
+		myPossibleAnswers = new ArrayList<String>();
+		for(int i = 0; i < thePossibleAnswers.size(); i++) {
+			myPossibleAnswers.add(thePossibleAnswers.get(i));
+		}
 	}
 	
-	public String[] getPossibleAnswers() {
+	/**
+	 * returns the list of possible answers.
+	 * @return the possible answers.
+	 */
+	public ArrayList<String> getPossibleAnswers() {
 		return myPossibleAnswers;
 	}
 	
@@ -33,17 +59,27 @@ public class MCQuestion extends Question {
 		return user; 
 	}
 	
+	/**
+	 * return the toString of this object. 
+	 */
 	public String toString() { // only displays question prompt right now. 
 		StringBuilder sb = new StringBuilder();
+		Collections.shuffle(myPossibleAnswers);
+//		ArrayList<String> helper = new ArrayList<String>();
+//		for(int i = 0; i < myPossibleAnswers.size(); i++) {
+//			helper.add(myPossibleAnswers.get(i));
+//		}
+//		Random rand = new Random();
 		sb.append("Question: " + this.getPrompt());
 		sb.append("\n");
-		sb.append("a. " + myPossibleAnswers[0]);
+//		int index = helper.indexOf(helper.get(rand.nextInt(helper.size())));
+		sb.append("a. " + myPossibleAnswers.get(0));
 		sb.append("\n");
-		sb.append("b. " + myPossibleAnswers[1]);
+		sb.append("b. " + myPossibleAnswers.get(1));
 		sb.append("\n");
-		sb.append("c. " + myPossibleAnswers[2]);	
+		sb.append("c. " + myPossibleAnswers.get(2));	
 		sb.append("\n");
-		sb.append("d. " + myPossibleAnswers[3]);
+		sb.append("d. " + myPossibleAnswers.get(3));
 		return sb.toString();
 	}
 }

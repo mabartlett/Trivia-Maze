@@ -1,7 +1,19 @@
 package Questions;
 
+/**
+ * This class handles the behavior of a TFQuestion. 
+ * @author Joseph Bode
+ * @version 12/15/2020
+ */
+
 public class TFQuestion extends Question {
 	
+	/**
+	 * Construct a True false question. 
+	 * @param thePrompt the question itself
+	 * @param theCorrectAnswer correct answer to the question.
+	 * @param theAnswered whether the question is answered or not. 
+	 */
 	public TFQuestion(String thePrompt, String theCorrectAnswer, boolean theAnswered) {
 		super(thePrompt, theCorrectAnswer, theAnswered);
 	}
@@ -26,6 +38,10 @@ public class TFQuestion extends Question {
 		return user; 
 	}
 	
+	/**
+	 * 
+	 * @return toString of a true false question.
+	 */
 	public String toString() { // only displays question prompt right now. 
 		StringBuilder sb = new StringBuilder();
 		sb.append("Question: " + this.getPrompt());

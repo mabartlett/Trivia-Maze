@@ -1,12 +1,19 @@
 package Questions;
 
+
 /**
  * Class that stores everything a question would need.
- * @author Team 2
- * @version 11/30/20
+ * @author Joseph Bode
+ * @version 12/15/20
  */
 public class SAQuestion extends Question {
-		
+	
+	/**
+	 * constructs an SAQuestion with given info.
+	 * @param thePrompt actual question
+	 * @param theCorrectAnswer the correct answer.
+	 * @param theAnswered whether the question is answered or not. 
+	 */
 	public SAQuestion(String thePrompt, String theCorrectAnswer, boolean theAnswered) {
 		super(thePrompt, theCorrectAnswer, theAnswered);
 	}
@@ -32,6 +39,10 @@ public class SAQuestion extends Question {
 		return user; 
 	}
 	
+	/**
+	 * Display an SA Question. 
+	 * @return returns SA Question String
+	 */
 	public String toString() { // only displays question prompt right now. 
 		StringBuilder sb = new StringBuilder();
 		sb.append("Question: " + this.getPrompt());
