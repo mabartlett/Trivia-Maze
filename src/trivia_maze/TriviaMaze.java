@@ -15,6 +15,12 @@ public class TriviaMaze {
 	/** Represents the minimum columns required for the maze. */
 	public static final int MIN_COLUMNS = 4;
 	
+	/** The maximum number of allowed rows. */
+	public static final int MAX_ROWS = 7;
+	
+	/** The maximum number of allowed columns. */
+	public static final int MAX_COLUMNS = 7;
+	
 	/** The object of the Maze. */
 	private static Maze myMazeGame;
 	
@@ -89,6 +95,13 @@ public class TriviaMaze {
 			System.out.print(" columns.");
 			System.out.println();
 			initMaze();
+		} else if (rows > MAX_ROWS || columns > MAX_COLUMNS) {
+			System.out.print("Please enter a maximum of ");
+			System.out.print(MAX_ROWS);
+			System.out.print(" rows and ");
+			System.out.print(MAX_COLUMNS);
+			System.out.print(" columns.");
+			System.out.println();
 		} else {
 			myMazeGame = new Maze(rows, columns);
 			myMazeGame.playGame();
