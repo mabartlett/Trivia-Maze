@@ -5,7 +5,7 @@
  */
 package trivia_maze;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -14,19 +14,28 @@ import java.util.Objects;
  * @author Team 2
  * @version Autumn 2020
  */
-public class Room {
+public class Room implements Serializable{
+	/** The serial version UID. */
+	private static final long serialVersionUID = 2L;
+	
 	/** The valid directions that the player can go. **/
-	private final String[] VALID_DIRECTIONS = {"n", "s", "e", "w"};
+	public static final String[] VALID_DIRECTIONS = {"n", "s", "e", "w"};
+	
+	/** The allowed length for the myText field. */
+	public static final int MAX_TEXT_LENGTH = 3;
 	
 	/** The x coordinate of the room, i.e., its column in the array. **/
 	private int myX;
 	
 	/** The y coordinate of the room, i.e., its row in the array. **/
 	private int myY;
+
+	/** A String representing the directions from the room that have doors. */
+	private String myDirections;
 	
-	/** The array of Doors. A room will have 1-4 doors. **/
+	/** A map of one of the valid directions to a door. */
 	private HashMap<String, Door> myDoors;
-	
+
 	/** The text that appears to represent each room. */
 	private String myText;
 	
@@ -34,29 +43,44 @@ public class Room {
 	 * Constructs a Room.
 	 * @param theX an int representing the room's x coordinate or column.
 	 * @param theY an int representing the room's y coordinate or row.
-	 * @param theDoors a HashMap of 1-4 Strings (directions) to Doors.
+	 * @param theDirections a String containing only "n", "s", "e", or "w".
 	 * @param theText a String of what the text is for the Room.
 	 */
-	public Room(final int theX, final int theY, 
-			final HashMap<String, Door> theDoors, final String theText) {
-		if (theX < 0 || theY < 0 || theDoors.keySet().size() < 1 || 
-				theDoors.keySet().size() > 4 ) {
-			throw new IllegalArgumentException();
+	public Room(final int theX, final int theY, final String theDirections,
+			final String theText) {
+		if (theX < 0) {
+			throw new IllegalArgumentException("Room's x coordinate cannot be "
+					+ "negative.");
+		} else if (theY < 0) {
+			throw new IllegalArgumentException("Room's y coordinate cannot be "
+					+ "negative.");
+		} else if ("".equals(theDirections)) {
+			throw new IllegalArgumentException("Room must have at least 1 "
+					+ "door.");
 		} else {
-			// Verify theDoors has no invalid keys.
-			final ArrayList<String> directions = new ArrayList<String>();
-			for (String i: VALID_DIRECTIONS) {
-				directions.add(i);
-			}
-			for (String i: theDoors.keySet()) {
-				if (!directions.contains(i)) {
-					throw new IllegalArgumentException();
+			// Verify theDirections has no invalid directions.
+			boolean valid;
+			for (int i = 0; i < theDirections.length(); i++) {
+				valid = false;
+				for (String j: VALID_DIRECTIONS) {
+					if (j.equals(theDirections.substring(i, i + 1))) {
+						valid = true;
+					}
+				}
+				if (!valid) {
+					throw new IllegalArgumentException("Room was passed an "
+							+ "illegal direction");
 				}
 			}
 			myX = Objects.requireNonNull(theX);
 			myY = Objects.requireNonNull(theY);
-			myDoors = Objects.requireNonNull(theDoors);
+			myDirections = Objects.requireNonNull(theDirections);
 			myText = Objects.requireNonNull(theText);
+			myDoors = new HashMap<String, Door>();
+			// Add the doors.
+			for (int i = 0; i < myDirections.length(); i++) {
+				myDoors.put(myDirections.substring(i, i + 1), new Door());
+			}
 		}
 	}
 
@@ -69,8 +93,9 @@ public class Room {
 		boolean result = true;
 		if (!verifyDirection(theDirection)) {
 			throw new IllegalArgumentException();
-		}
-		if (myDoors.get(theDirection).isLocked()) {
+		} else if (myDoors.get(theDirection) == null) {
+			result = false;
+		} else if (myDoors.get(theDirection).isPermaLocked()) {
 			result = false;
 		}
 		return result;
@@ -84,7 +109,7 @@ public class Room {
 	public void lockDoor(final String theDirection) {
 		if (verifyDirection(theDirection)) {
 			final Door door = myDoors.get(theDirection);
-			door.setLocked(true);
+			door.setPermaLocked(true);
 		} else {
 			throw new IllegalArgumentException();
 		}
@@ -105,10 +130,10 @@ public class Room {
 	}
 
 	/**
-	 * @return the doors
+	 * @return the directions
 	 */
-	public HashMap<String, Door> getDoors() {
-		return myDoors;
+	public String getDirections() {
+		return myDirections;
 	}
 
 	/**
@@ -118,14 +143,21 @@ public class Room {
 		return myText;
 	}
 	
+	/** @return the doors */
+	public HashMap<String, Door> getDoors() {
+		return myDoors;
+	}
+	
 	/**
 	 * Change the text representation of the room.
 	 * @param theText the text with which the Room will be represented. It must
 	 * be an empty string or a String longer than 1 character.
 	 */
 	public void setText(final String theText) {
-		if ("".equals(theText) || theText.length() > 1) {
-			throw new IllegalArgumentException();
+		if (theText.length() > MAX_TEXT_LENGTH) {
+			throw new IllegalArgumentException("String is too long.");
+		} else if ("".equals(theText)) {
+			throw new IllegalArgumentException("String must not be empty.");
 		} else {
 			myText = Objects.requireNonNull(theText);
 		}
@@ -134,8 +166,34 @@ public class Room {
 	/**
 	 * @return a String representation of the Room object.
 	 */
+	@Override
 	public String toString() {
 		return myText;
+	}
+	
+	/**
+	 * @return Whether the fields are the same for another Room and this one.
+	 * @param theOther the other object to compare it to.
+	 */
+	@Override
+	public boolean equals(final Object theOther) {
+		boolean result;
+		if (theOther == this) {
+			result = true;
+		} else if (theOther == null) {
+			result = false;
+		} else if (!theOther.getClass().getName().equals(getClass().
+				getName())) {
+			result = false;
+		} else {
+			result = myX == ((Room)theOther).getX();
+			result = result && myY == ((Room)theOther).getY();
+			result = result && myDirections.equals(((Room)theOther).
+					getDirections());
+			result = result && myText.equals(((Room)theOther).getText());
+			result = result && myDoors.equals(((Room)theOther).getDoors());
+		}
+		return result;
 	}
 	
 	/**
